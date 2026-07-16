@@ -1,0 +1,49 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Клонируем репозиторий
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Устанавливаем Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Устанавливаем зависимости
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Запускаем линтер
+      - name: Lint
+        run: npm run lint
+
+      # 5. Запускаем тесты
+      - name: Test
+        run: npm run test:run
+
+      # 6. Сборка (env подтягивается из GitHub Secrets)
+      - name: Build
+        run: npm run build
+        env:
+          VITE_EDS_LOGIN: ${{ secrets.VITE_EDS_LOGIN }}
+          VITE_EDS_PASSWORD: ${{ secrets.VITE_EDS_PASSWORD }}
+
+      # 7. Деплой на GitHub Pages (пример)
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
