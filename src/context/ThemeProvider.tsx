@@ -1,7 +1,7 @@
-import type { Theme } from '../types.ts';
+import type { Theme } from '@shared/utils/types.ts';
 import { type ReactNode, useCallback, useEffect, useState } from 'react';
 import { ThemeContext } from './ThemeContext.tsx';
-import { getSystemTheme, THEME_STORAGE_KEY } from '../utils/theme.ts';
+import { getSystemTheme, THEME_STORAGE_KEY } from '../shared/utils/theme.ts';
 
 function resolveTheme(theme: Theme): 'light' | 'dark' {
   if (theme === 'system') {

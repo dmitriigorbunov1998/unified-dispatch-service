@@ -33,6 +33,8 @@
     ]
   },
   "dependencies": {
+    "effector": "^23.4.4",
+    "effector-react": "^23.3.0",
     "lucide-react": "^1.23.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"

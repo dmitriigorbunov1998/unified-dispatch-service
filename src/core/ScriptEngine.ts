@@ -3,8 +3,8 @@ import type {
   ScriptConfig,
   Statistics,
   TaskResult,
-} from './types.ts';
-import { MOCK_TASKS } from './mockData.ts';
+} from '../types/index.ts';
+import { MOCK_TASKS } from '../mock/mockData.ts';
 import { getLastDayFormatted } from '../shared/utils/time.ts';
 import { generateId } from '../shared/utils/id.ts';
 

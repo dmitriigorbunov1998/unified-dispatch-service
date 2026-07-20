@@ -2,7 +2,7 @@ import { Globe, LogOut } from 'lucide-react';
 import type { Tab } from '../../hooks/useTabs';
 import type { LucideIcon } from 'lucide-react';
 import './Header.css';
-import type { Theme } from '../../types';
+import type { Theme } from '@shared/utils/types';
 import * as React from 'react';
 
 interface ThemeOptionWithLabel {

@@ -1,4 +1,4 @@
-import type { Theme } from '../types.ts';
+import type { Theme } from '@shared/utils/types.ts';
 import { createContext } from 'react';
 
 export interface ThemeContextType {
