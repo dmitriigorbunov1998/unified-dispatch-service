@@ -1,5 +1,5 @@
 import { Sun, Moon, Monitor } from 'lucide-react';
-import type { Theme } from './types';
+import type { Theme } from './types.ts';
 import type { LucideIcon } from 'lucide-react';
 
 export interface ThemeOption {
