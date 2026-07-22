@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from '../../components/Header/Header';
-import { useHeader } from '../../hooks/useHeader';
+import { useHeader } from '@/hooks/useHeader.ts';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -12,12 +12,98 @@ import {
 import type { ComponentProps } from 'react';
 import './Dashboard.css';
 import { StatsCard } from '../../components/StatsCard/StatsCard';
-import { useTranslation } from '../../i18n';
+import { useTranslation } from '@/i18n';
+
+type AutomationStatus = {
+  isRunning: boolean;
+  logs: string[];
+};
+
+type MessageResponse = {
+  message?: string;
+};
 
 export function Dashboard() {
+  const [logs, setLogs] = useState<string[]>([]);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [activeTab, setActiveTab] = useState('dashboard');
   const headerProps = useHeader();
+
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (!isRunning) {
+      return;
+    }
+
+    const getAutomationStatus = async (): Promise<void> => {
+      try {
+        const response = await fetch('/api/automation/status');
+
+        if (!response.ok) {
+          setError(t('Не удалось получить статус скрипта'));
+          setIsRunning(false);
+
+          return;
+        }
+
+        const status: AutomationStatus = await response.json();
+
+        setLogs(status.logs);
+        setIsRunning(status.isRunning);
+      } catch (requestError) {
+        const message =
+          requestError instanceof Error
+            ? requestError.message
+            : 'Неизвестная ошибка';
+
+        setError(message);
+        setIsRunning(false);
+      }
+    };
+
+    void getAutomationStatus();
+
+    const intervalId = window.setInterval(() => {
+      void getAutomationStatus();
+    }, 1000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [isRunning, t]);
+
+  const handleStart = async (): Promise<void> => {
+    setError(null);
+    setLogs([]);
+    setIsRunning(true);
+
+    try {
+      const response = await fetch('/api/automation/start', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        return;
+      }
+
+      const data: MessageResponse = await response.json();
+
+      setError(data.message ?? 'Не удалось запустить авторизацию');
+
+      setIsRunning(false);
+    } catch (requestError) {
+      const message =
+        requestError instanceof Error
+          ? requestError.message
+          : 'Неизвестная ошибка';
+
+      setError(message);
+      setIsRunning(false);
+    }
+  };
 
   const headerComponentProps: ComponentProps<typeof Header> = {
     ...headerProps,
@@ -48,6 +134,25 @@ export function Dashboard() {
               </div>
             </div>
           </div>
+
+          <button type="button" disabled={isRunning} onClick={handleStart}>
+            {isRunning ? 'Скрипт выполняется...' : 'Запустить скрипт'}
+          </button>
+
+          {error && <p>Ошибка: {error}</p>}
+
+          <section>
+            <div>Логи</div>
+          </section>
+
+          <div>
+            {logs.length === 0 ? (
+              <div>Логи пока отсутствуют</div>
+            ) : (
+              logs.map((log, index) => <p key={`${index}-${log}`}>{log}</p>)
+            )}
+          </div>
+
           <div className="dashboard-stats">
             <StatsCard
               title={t('dashboard.stats.total')}
