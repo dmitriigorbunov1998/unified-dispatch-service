@@ -1,5 +1,5 @@
 import { Activity, Settings, Database } from 'lucide-react';
-import { useTranslation } from '../i18n';
+import { useTranslation } from '@/i18n';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Tab {

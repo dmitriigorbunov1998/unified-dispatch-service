@@ -3,10 +3,10 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   // playwright.config.ts — для E2E тестов
   testDir: './e2e', // Где лежат E2E тесты
-  timeout: 30_000,  // Максимальное время теста (30 сек)
+  timeout: 30_000, // Максимальное время теста (30 сек)
   fullyParallel: true,
-  retries: 2,       // Повторять упавшие тесты 2 раза
-  workers: 2,       // Запускать 2 теста параллельно
+  retries: 2, // Повторять упавшие тесты 2 раза
+  workers: 2, // Запускать 2 теста параллельно
 
   reporter: [
     ['html', { outputFolder: './playwright-report' }],

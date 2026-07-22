@@ -1,4 +1,4 @@
-import { setLanguage, getLanguage, t } from '../index';
+import { setLanguage, getLanguage, t } from '@/i18n';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('i18n', () => {
