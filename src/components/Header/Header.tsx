@@ -1,8 +1,8 @@
 import { Globe, LogOut } from 'lucide-react';
-import type { Tab } from '../../hooks/useTabs';
+import type { Tab } from '@/hooks/useTabs.ts';
 import type { LucideIcon } from 'lucide-react';
 import './Header.css';
-import type { Theme } from '@shared/utils/types';
+import type { Theme } from '@shared/theme/types.ts';
 import * as React from 'react';
 
 interface ThemeOptionWithLabel {

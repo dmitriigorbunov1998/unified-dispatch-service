@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { Header } from '../Header';
 import { Sun, Moon, Monitor, Activity, Settings } from 'lucide-react';
 import { expect, it, describe, vi } from 'vitest';
-import type { Theme } from '@shared/utils/types.ts';
+import type { Theme } from '@shared/theme/types.ts';
 
 // Рендерим компонент с тестовыми данными
 const mockProps = {
