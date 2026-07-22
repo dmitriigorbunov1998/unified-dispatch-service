@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
-import { AppProviders } from './app/providers/index.tsx';
+import { ThemeProvider } from '@/context/ThemeProvider.tsx';
 
 // Set initial theme before React renders (Избегаем миганий при смене тем)
 const savedTheme = localStorage.getItem('theme') || 'system';
@@ -18,8 +18,8 @@ if (savedTheme === 'system') {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AppProviders>
+    <ThemeProvider>
       <App />
-    </AppProviders>
+    </ThemeProvider>
   </StrictMode>
 );
