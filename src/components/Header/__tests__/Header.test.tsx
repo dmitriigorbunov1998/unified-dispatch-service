@@ -4,7 +4,6 @@ import { Sun, Moon, Monitor, Activity, Settings } from 'lucide-react';
 import { expect, it, describe, vi } from 'vitest';
 import type { Theme } from '@shared/theme/types.ts';
 
-// Рендерим компонент с тестовыми данными
 const mockProps = {
   activeTab: 'dashboard',
   tabs: [
