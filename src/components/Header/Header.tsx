@@ -1,137 +1,146 @@
 import { Globe, LogOut } from 'lucide-react';
-import type { Tab } from '@/hooks/useTabs.ts';
-import type { LucideIcon } from 'lucide-react';
+
+import type { HeaderProps } from './Header.types';
+
 import './Header.css';
-import type { Theme } from '@shared/theme/types.ts';
-import * as React from 'react';
-
-interface ThemeOptionWithLabel {
-  value: Theme;
-  label: string;
-  icon: LucideIcon;
-}
-
-interface HeaderProps {
-  /* Данные */
-  activeTab: string;
-  tabs: Tab[];
-  themeOptions: ThemeOptionWithLabel[];
-  ThemeIcon: LucideIcon;
-
-  /* Состояние */
-  theme: string;
-  themeMenuOpen: boolean;
-  lang: string;
-  /* Refs */
-  menuRef: React.RefObject<HTMLDivElement | null>;
-
-  /* Действия */
-  onTabChange: (tab: string) => void;
-  onToggleLang: () => void;
-  onToggleThemeMenu: () => void;
-  onSelectTheme: (theme: Theme) => void;
-
-  /* Переводы */
-  t: (key: string) => string;
-}
 
 export function Header({
   activeTab,
   tabs,
-  themeOptions,
-  ThemeIcon,
+  lang,
   theme,
   themeMenuOpen,
-  lang,
-  menuRef,
+  themeOptions,
+  ThemeIcon,
   onTabChange,
   onToggleLang,
   onToggleThemeMenu,
   onSelectTheme,
+  onLogout,
+  themeMenuRef,
   t,
 }: HeaderProps) {
   return (
     <div className="header-wrapper">
-      {/* Semi-transparent dark overlay that also fades */}
-      <div className="progressive-blur-bg" />
+      <div className="header-background" aria-hidden="true" />
+      <div className="header-border" aria-hidden="true" />
 
-      {/* Subtle border at the header bottom */}
-      <div className="progressive-blur-border" />
-
-      {/* Actual header content */}
       <header className="header">
         <div className="header-inner">
           <div className="header-left">
-            <div className="header-logo">
-              <span>E</span>
+            <div className="header-logo" aria-hidden="true">
+              E
             </div>
+
             <div className="header-brand">
               <div className="header-title">{t('app.title')}</div>
               <div className="header-subtitle">{t('app.subtitle')}</div>
             </div>
+
             <div className="header-status">
-              <div className="header-status-dot" />
+              <span className="header-status-dot" aria-hidden="true" />
               <span className="header-status-text">{t('status.title')}</span>
             </div>
           </div>
 
-          {/* Navigation tabs — transforms into Row 2 without background on mobile (< 768px) */}
-          <nav className="header-center">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => onTabChange(tab.id)}
-                className={`header-tab ${activeTab === tab.id ? 'active' : ''}`}
-                title={tab.title}
-              >
-                <tab.icon size={16} />
-                {tab.label}
-              </button>
-            ))}
+          <nav className="header-navigation" aria-label={t('nav.title')}>
+            {tabs.map(({ id, label, title, icon: TabIcon }) => {
+              const isActive = activeTab === id;
+
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className={`header-tab ${isActive ? 'active' : ''}`}
+                  aria-current={isActive ? 'page' : undefined}
+                  data-testid={`header-tab-${id}`}
+                  title={title}
+                  onClick={() => onTabChange(id)}
+                >
+                  <TabIcon size={16} aria-hidden="true" />
+                  <span className="header-tab-label">{label}</span>
+                </button>
+              );
+            })}
           </nav>
 
-          <div className="header-right">
+          <div className="header-actions">
             <div className="header-user">
-              <div className="header-avatar">ДГ</div>
+              <div className="header-avatar" aria-hidden="true">
+                ДГ
+              </div>
+
               <span className="header-user-name">Дмитрий Горбунов</span>
             </div>
 
             <button
-              className="header-btn"
-              onClick={onToggleLang}
+              type="button"
+              className="header-button header-language-button"
+              aria-label={t('lang.toggle')}
+              data-testid="header-language-toggle"
               title={t('lang.toggle')}
+              onClick={onToggleLang}
             >
-              <Globe size={18} />
-              <span>{lang === 'ru' ? 'RU' : 'EN'}</span>
+              <Globe size={18} aria-hidden="true" />
+
+              <span className="header-language-label">
+                {lang.toUpperCase()}
+              </span>
             </button>
 
-            <div className="header-theme-menu" ref={menuRef}>
+            <div className="header-theme" ref={themeMenuRef}>
               <button
-                className="header-btn"
-                onClick={onToggleThemeMenu}
+                type="button"
+                className="header-button"
+                aria-label={t('theme.select')}
+                aria-haspopup="menu"
+                aria-expanded={themeMenuOpen}
+                data-testid="header-theme-toggle"
                 title={t('theme.select')}
+                onClick={onToggleThemeMenu}
               >
-                <ThemeIcon size={18} />
+                <ThemeIcon size={18} aria-hidden="true" />
               </button>
 
               {themeMenuOpen && (
-                <div className="header-theme-dropdown">
-                  {themeOptions.map((opt) => (
-                    <button
-                      key={opt.value}
-                      className={`header-theme-option ${theme === opt.value ? 'active' : ''}`}
-                      onClick={() => onSelectTheme(opt.value)}
-                    >
-                      <opt.icon size={16} />
-                      {opt.label}
-                    </button>
-                  ))}
+                <div
+                  className="header-theme-menu"
+                  role="menu"
+                  aria-label={t('theme.select')}
+                >
+                  {themeOptions.map(({ value, label, icon: OptionIcon }) => {
+                    const isSelected = theme === value;
+
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        role="menuitemradio"
+                        aria-checked={isSelected}
+                        className={`header-theme-option ${
+                          isSelected ? 'active' : ''
+                        }`}
+                        data-testid={`header-theme-option-${value}`}
+                        onClick={() => onSelectTheme(value)}
+                      >
+                        <OptionIcon size={16} aria-hidden="true" />
+
+                        <span>{label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
 
-            <button className="header-btn danger" title={t('logout.title')}>
-              <LogOut size={18} />
+            <button
+              type="button"
+              className="header-button header-logout-button"
+              aria-label={t('logout.title')}
+              title={t('logout.title')}
+              onClick={onLogout}
+            >
+              <LogOut size={18} aria-hidden="true" />
             </button>
           </div>
         </div>

@@ -1,11 +1,21 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Activity, Monitor, Moon, Settings, Sun } from 'lucide-react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Header } from '../Header';
-import { Sun, Moon, Monitor, Activity, Settings } from 'lucide-react';
-import { expect, it, describe, vi } from 'vitest';
-import type { Theme } from '@shared/theme/types.ts';
+import type { HeaderProps } from '../Header.types';
 
-const mockProps = {
+const callbacks = {
+  onTabChange: vi.fn(),
+  onToggleLang: vi.fn(),
+  onToggleThemeMenu: vi.fn(),
+  onSelectTheme: vi.fn(),
+  onLogout: vi.fn(),
+};
+
+const defaultProps: HeaderProps = {
   activeTab: 'dashboard',
+
   tabs: [
     {
       id: 'dashboard',
@@ -14,83 +24,144 @@ const mockProps = {
       icon: Activity,
     },
     {
-      id: 'settings',
+      id: 'config',
       label: 'Settings',
       title: 'Settings',
       icon: Settings,
     },
   ],
-  themeOptions: [
-    { value: 'light' as Theme, label: 'Light', icon: Sun },
-    { value: 'dark' as Theme, label: 'Dark', icon: Moon },
-    { value: 'system' as Theme, label: 'System', icon: Monitor },
-  ],
-  ThemeIcon: Sun,
+
+  lang: 'ru',
   theme: 'light',
   themeMenuOpen: false,
-  lang: 'ru',
-  menuRef: { current: null },
-  onTabChange: vi.fn(),
-  onToggleLang: vi.fn(),
-  onToggleThemeMenu: vi.fn(),
-  onSelectTheme: vi.fn(),
-  t: (key: string) => key,
+
+  ThemeIcon: Sun,
+
+  themeOptions: [
+    {
+      value: 'light',
+      label: 'Light',
+      icon: Sun,
+    },
+    {
+      value: 'dark',
+      label: 'Dark',
+      icon: Moon,
+    },
+    {
+      value: 'system',
+      label: 'System',
+      icon: Monitor,
+    },
+  ],
+
+  themeMenuRef: { current: null },
+
+  t: (key) => key,
+
+  ...callbacks,
 };
 
-describe('Header Component', () => {
-  it('should render without crashing', () => {
-    render(<Header {...mockProps} />);
-    expect(screen.getByText('Dashboard')).toBeInTheDocument();
-  });
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
-  it('should call onTabChange when tab clicked', () => {
-    const onTabChange = vi.fn(); // Создаем фейковую функцию
-    render(<Header {...mockProps} onTabChange={onTabChange} />);
+describe('Header', () => {
+  it('renders tabs and current language', () => {
+    render(<Header {...defaultProps} />);
 
-    fireEvent.click(screen.getByText('Settings'));
-    expect(onTabChange).toHaveBeenCalledWith('settings');
-  });
+    expect(
+      screen.getByRole('button', { name: 'Dashboard' })
+    ).toBeInTheDocument();
 
-  it('should highlight active tab', () => {
-    const { rerender } = render(
-      <Header {...mockProps} activeTab="dashboard" />
+    expect(
+      screen.getByRole('button', { name: 'Settings' })
+    ).toBeInTheDocument();
+
+    expect(screen.getByTestId('header-language-toggle')).toHaveTextContent(
+      'RU'
     );
-    const dashboardTab = screen.getByText('Dashboard').closest('button');
-    expect(dashboardTab).toHaveClass('active');
-
-    rerender(<Header {...mockProps} activeTab="settings" />);
-    const settingsTab = screen.getByText('Settings').closest('button');
-    expect(settingsTab).toHaveClass('active');
   });
 
-  it('should toggle language on button click', () => {
-    const onToggleLang = vi.fn();
-    render(<Header {...mockProps} onToggleLang={onToggleLang} />);
+  it('marks current tab as active', () => {
+    render(<Header {...defaultProps} activeTab="config" />);
 
-    const langButton = screen.getByText('RU');
-    fireEvent.click(langButton);
-    expect(onToggleLang).toHaveBeenCalled();
-  });
-
-  it('should show theme dropdown when menu opened', () => {
-    render(<Header {...mockProps} themeMenuOpen={true} />);
-
-    expect(screen.getByText('Light')).toBeInTheDocument();
-    expect(screen.getByText('Dark')).toBeInTheDocument();
-    expect(screen.getByText('System')).toBeInTheDocument();
-  });
-
-  it('should call onSelectTheme when theme option clicked', () => {
-    const onSelectTheme = vi.fn();
-    render(
-      <Header
-        {...mockProps}
-        themeMenuOpen={true}
-        onSelectTheme={onSelectTheme}
-      />
+    expect(screen.getByTestId('header-tab-config')).toHaveAttribute(
+      'aria-current',
+      'page'
     );
 
-    fireEvent.click(screen.getByText('Dark'));
-    expect(onSelectTheme).toHaveBeenCalledWith('dark');
+    expect(screen.getByTestId('header-tab-dashboard')).not.toHaveAttribute(
+      'aria-current'
+    );
+  });
+
+  it('calls onTabChange with selected tab id', async () => {
+    const user = userEvent.setup();
+
+    render(<Header {...defaultProps} />);
+
+    await user.click(screen.getByTestId('header-tab-config'));
+
+    expect(callbacks.onTabChange).toHaveBeenCalledOnce();
+    expect(callbacks.onTabChange).toHaveBeenCalledWith('config');
+  });
+
+  it('calls language handler', async () => {
+    const user = userEvent.setup();
+
+    render(<Header {...defaultProps} />);
+
+    await user.click(screen.getByTestId('header-language-toggle'));
+
+    expect(callbacks.onToggleLang).toHaveBeenCalledOnce();
+  });
+
+  it('calls theme menu handler', async () => {
+    const user = userEvent.setup();
+
+    render(<Header {...defaultProps} />);
+
+    await user.click(screen.getByTestId('header-theme-toggle'));
+
+    expect(callbacks.onToggleThemeMenu).toHaveBeenCalledOnce();
+  });
+
+  it('renders and selects theme option', async () => {
+    const user = userEvent.setup();
+
+    render(<Header {...defaultProps} themeMenuOpen />);
+
+    const darkOption = screen.getByTestId('header-theme-option-dark');
+
+    expect(darkOption).toBeInTheDocument();
+
+    await user.click(darkOption);
+
+    expect(callbacks.onSelectTheme).toHaveBeenCalledOnce();
+    expect(callbacks.onSelectTheme).toHaveBeenCalledWith('dark');
+  });
+
+  it('marks selected theme', () => {
+    render(<Header {...defaultProps} theme="dark" themeMenuOpen />);
+
+    expect(screen.getByTestId('header-theme-option-dark')).toHaveAttribute(
+      'aria-checked',
+      'true'
+    );
+  });
+
+  it('calls logout handler', async () => {
+    const user = userEvent.setup();
+
+    render(<Header {...defaultProps} />);
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'logout.title',
+      })
+    );
+
+    expect(callbacks.onLogout).toHaveBeenCalledOnce();
   });
 });
