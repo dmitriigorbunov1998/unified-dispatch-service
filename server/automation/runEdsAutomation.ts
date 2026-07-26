@@ -1,109 +1,483 @@
-import { chromium, type Browser, type Page } from 'playwright';
+import { chromium } from 'playwright';
+import type { Browser, BrowserContext, Locator, Page } from 'playwright';
 
 type LogCallback = (message: string) => void;
 
-const SEARCH_VALUES = ['Немчиновка', 'Новоивановское'];
+interface EdsConfig {
+  url: string;
+  login: string;
+  password: string;
+}
 
-const TARGET_CATEGORY =
+const CATEGORY_NAME =
   '23.4. Обеспечение доступа в квартиру для проведения ТО ВКГО совместно с СО';
 
-async function authorize(page: Page, addLog: LogCallback) {
-  const login = process.env.EDS_LOGIN;
-  const password = process.env.EDS_LOG_PASSWORD;
+const STATUS_NAME = 'Требуется доработка';
 
-  if (!login || !password) {
-    throw new Error('Не указаны EDS_LOGIN или EDS_PASSWORD в файле .env');
+const DISTRICTS = ['Немчиновка', 'Новоивановское'] as const;
+
+/**
+ * Случайная пауза между действиями.
+ */
+function pause(minMilliseconds = 500, maxMilliseconds = 1_200): Promise<void> {
+  const delay =
+    Math.floor(Math.random() * (maxMilliseconds - minMilliseconds + 1)) +
+    minMilliseconds;
+
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
+}
+
+/**
+ * Экранирует специальные символы для RegExp.
+ */
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Получение конфигурации из переменных окружения.
+ */
+function getEdsConfig(): EdsConfig {
+  const url = process.env.EDS_URL?.trim();
+  const login = process.env.EDS_LOGIN?.trim();
+  const password = process.env.EDS_PASSWORD?.trim();
+
+  if (!url || !login || !password) {
+    const missingVariables: string[] = [];
+
+    if (!url) {
+      missingVariables.push('EDS_URL');
+    }
+
+    if (!login) {
+      missingVariables.push('EDS_LOGIN');
+    }
+
+    if (!password) {
+      missingVariables.push('EDS_PASSWORD');
+    }
+
+    throw new Error(
+      `Не указаны переменные окружения: ${missingVariables.join(', ')}`
+    );
   }
 
-  addLog('Открываю портал ЕДС');
+  return {
+    url,
+    login,
+    password,
+  };
+}
 
-  await page.goto(process.env.EDS_URL ?? 'https://eds.mosreg.ru/', {
+/**
+ * Ожидает первый видимый элемент из всех найденных.
+ *
+ * Angular может оставлять в DOM скрытые копии
+ * dropdown, кнопок и модальных окон.
+ */
+async function waitForVisibleLocator(
+  locator: Locator,
+  elementName: string,
+  timeout = 15_000
+): Promise<Locator> {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < timeout) {
+    const elementsCount = await locator.count();
+
+    for (let index = 0; index < elementsCount; index += 1) {
+      const element = locator.nth(index);
+
+      if (await element.isVisible()) {
+        return element;
+      }
+    }
+
+    await pause(100, 200);
+  }
+
+  throw new Error(`Истекло время ожидания элемента: ${elementName}`);
+}
+
+/**
+ * Авторизация на портале ЕДС.
+ */
+async function authorize(
+  page: Page,
+  config: EdsConfig,
+  addLog: LogCallback
+): Promise<void> {
+  addLog(`Открываю портал ЕДС: ${config.url}`);
+
+  await page.goto(config.url, {
     waitUntil: 'domcontentloaded',
+    timeout: 30_000,
   });
 
-  addLog('Нажимаю кнопку входа');
+  await pause(800, 1_500);
 
-  await page.locator('.header-login__link').click();
+  const loginLinks = page.locator('div.header-login__link').filter({
+    hasText: /^Войти$/,
+  });
 
-  addLog('Заполняю данные авторизации');
+  addLog('Ожидаю кнопку «Войти»');
 
-  await page.locator('input[type="text"]').first().fill(login);
-  await page.locator('input[type="password"]').first().fill(password);
+  const loginLink = await waitForVisibleLocator(loginLinks, 'кнопка «Войти»');
 
-  await page
-    .getByRole('button', {
-      name: /войти/i,
-    })
-    .click();
+  await loginLink.scrollIntoViewIfNeeded();
+  await loginLink.hover();
 
-  addLog('Ожидаю завершения авторизации');
+  await pause(400, 800);
 
-  await page.waitForLoadState('domcontentloaded');
+  addLog('Открываю форму авторизации');
 
-  addLog('Авторизация выполнена');
-}
+  await loginLink.click({
+    timeout: 15_000,
+  });
 
-async function searchApplications(
-  page: Page,
-  searchValue: string,
-  addLog: LogCallback
-) {
-  addLog(`Начинаю поиск: ${searchValue}`);
+  await pause(700, 1_300);
 
-  const searchInput = page.locator('.search-input');
+  const loginInput = page.locator('input[placeholder="example@mail.ru"]');
 
-  await searchInput.fill(searchValue);
-  await searchInput.press('Enter');
+  const passwordInput = page.locator(
+    'input[placeholder="Пароль"][type="password"]'
+  );
 
-  addLog(`Поисковой запрос "${searchValue}" отправлен`);
+  addLog('Ожидаю форму авторизации');
 
-  await page.waitForTimeout(1500);
+  await loginInput.waitFor({
+    state: 'visible',
+    timeout: 15_000,
+  });
 
-  const categoryCells = page.locator('td.cdk-cell.cdk-column-category-name');
+  await passwordInput.waitFor({
+    state: 'visible',
+    timeout: 15_000,
+  });
 
-  const cellsCount = await categoryCells.count();
+  addLog('Заполняю логин');
 
-  addLog(`Найдено строк в таблице ${cellsCount}`);
+  await loginInput.click();
 
-  let matchingApplications = 0;
+  await loginInput.pressSequentially(config.login, {
+    delay: 80,
+  });
 
-  for (let index = 0; index < cellsCount; index += 1) {
-    const categoryCell = categoryCells.nth(index);
-    const categoryText = (await categoryCell.innerText()).trim();
+  await pause(500, 900);
 
-    if (!categoryText.includes(TARGET_CATEGORY)) {
-      continue;
+  addLog('Заполняю пароль');
+
+  await passwordInput.click();
+
+  await passwordInput.pressSequentially(config.password, {
+    delay: 90,
+  });
+
+  await passwordInput.press('Tab');
+
+  await pause(700, 1_200);
+
+  const authorizeButton = page.locator(
+    '.button-container button[type="submit"].lib-button.green'
+  );
+
+  addLog('Ожидаю кнопку «Авторизоваться»');
+
+  await authorizeButton.waitFor({
+    state: 'visible',
+    timeout: 15_000,
+  });
+
+  await authorizeButton.scrollIntoViewIfNeeded();
+
+  await page.waitForFunction(
+    (selector) => {
+      const button = document.querySelector<HTMLButtonElement>(selector);
+
+      return button !== null && !button.disabled;
+    },
+    '.button-container button[type="submit"].lib-button.green',
+    {
+      timeout: 15_000,
     }
+  );
 
-    matchingApplications += 1;
+  const isButtonDisabled = await authorizeButton.isDisabled();
 
-    addLog(
-      `Найдена подходящая заявка ${matchingApplications}: ${categoryText}`
-    );
-
-    if (matchingApplications === 0) {
-      addLog(`Для "${searchValue}" подходящих заявок не найдено`);
-      return;
-    }
-
-    addLog(
-      `Для "${searchValue}" найдено подходящих заявок: ${matchingApplications}`
-    );
+  if (isButtonDisabled) {
+    throw new Error('Кнопка «Авторизоваться» осталась заблокированной');
   }
+
+  await authorizeButton.hover();
+
+  await pause(500, 900);
+
+  addLog('Нажимаю кнопку «Авторизоваться»');
+
+  await authorizeButton.click({
+    timeout: 15_000,
+  });
+
+  addLog('Кнопка «Авторизоваться» нажата');
+
+  await loginInput.waitFor({
+    state: 'hidden',
+    timeout: 30_000,
+  });
+
+  await pause(1_000, 1_800);
+
+  addLog('Авторизация успешно завершена');
 }
 
+/**
+ * Нажимает видимую кнопку «Применить».
+ */
+async function clickVisibleApplyButton(
+  page: Page,
+  filterName: string,
+  addLog: LogCallback
+): Promise<void> {
+  const applyButtons = page.locator('div.lib-card-footer-btn').filter({
+    hasText: /^\s*Применить\s*$/,
+  });
+
+  addLog(`Ожидаю кнопку «Применить» для фильтра «${filterName}»`);
+
+  const applyButton = await waitForVisibleLocator(
+    applyButtons,
+    `кнопка «Применить» для фильтра «${filterName}»`
+  );
+
+  await applyButton.scrollIntoViewIfNeeded();
+  await applyButton.hover();
+
+  await pause(400, 800);
+
+  addLog(`Применяю фильтр «${filterName}»`);
+
+  await applyButton.click({
+    timeout: 15_000,
+  });
+
+  await pause(900, 1_500);
+
+  addLog(`Фильтр «${filterName}» применён`);
+}
+
+/**
+ * Выбор категории.
+ */
+async function selectCategory(page: Page, addLog: LogCallback): Promise<void> {
+  addLog('Открываю фильтр «Категория»');
+
+  const categoryFilters = page.locator('div').filter({
+    hasText: /^Категория$/,
+  });
+
+  const categoryFilter = await waitForVisibleLocator(
+    categoryFilters,
+    'фильтр «Категория»'
+  );
+
+  await categoryFilter.scrollIntoViewIfNeeded();
+  await categoryFilter.click({
+    timeout: 15_000,
+  });
+
+  await pause(600, 1_100);
+
+  addLog(`Выбираю категорию: ${CATEGORY_NAME}`);
+
+  const categoryOptions = page.locator('span.ml-12').filter({
+    hasText: new RegExp(`^\\s*${escapeRegExp(CATEGORY_NAME)}\\s*$`),
+  });
+
+  const categoryOption = await waitForVisibleLocator(
+    categoryOptions,
+    `категория «${CATEGORY_NAME}»`
+  );
+
+  await categoryOption.scrollIntoViewIfNeeded();
+  await categoryOption.click({
+    timeout: 15_000,
+  });
+
+  await pause(600, 1_100);
+
+  await clickVisibleApplyButton(page, 'Категория', addLog);
+}
+
+/**
+ * Выбор статуса.
+ */
+async function selectStatus(page: Page, addLog: LogCallback): Promise<void> {
+  addLog('Открываю фильтр «Статус»');
+
+  const statusFilters = page.locator('div').filter({
+    hasText: /^Статус$/,
+  });
+
+  const statusFilter = await waitForVisibleLocator(
+    statusFilters,
+    'фильтр «Статус»'
+  );
+
+  await statusFilter.scrollIntoViewIfNeeded();
+  await statusFilter.click({
+    timeout: 15_000,
+  });
+
+  await pause(600, 1_100);
+
+  addLog(`Выбираю статус: ${STATUS_NAME}`);
+
+  const statusOptions = page.locator('span.ml-12').filter({
+    hasText: new RegExp(`^\\s*${escapeRegExp(STATUS_NAME)}\\s*$`),
+  });
+
+  const statusOption = await waitForVisibleLocator(
+    statusOptions,
+    `статус «${STATUS_NAME}»`
+  );
+
+  await statusOption.scrollIntoViewIfNeeded();
+  await statusOption.click({
+    timeout: 15_000,
+  });
+
+  await pause(600, 1_100);
+
+  await clickVisibleApplyButton(page, 'Статус', addLog);
+}
+
+/**
+ * Выбор районов.
+ *
+ * Dropdown открываем один раз, потому что после
+ * выбора первого района он остаётся открытым.
+ */
+async function selectDistricts(page: Page, addLog: LogCallback): Promise<void> {
+  addLog('Открываю фильтр «Район»');
+
+  const districtDropdowns = page.locator('div').filter({
+    hasText: /^Район$/,
+  });
+
+  const districtDropdown = await waitForVisibleLocator(
+    districtDropdowns,
+    'фильтр «Район»'
+  );
+
+  await districtDropdown.scrollIntoViewIfNeeded();
+  await districtDropdown.click({
+    timeout: 15_000,
+  });
+
+  await pause(500, 900);
+
+  for (const districtName of DISTRICTS) {
+    addLog(`Выбираю район: ${districtName}`);
+
+    /*
+     * После каждого клика локатор создаётся заново.
+     * Angular может перерисовать список вариантов.
+     */
+    const districtOptions = page.locator('span.ml-12').filter({
+      hasText: new RegExp(`^\\s*${escapeRegExp(districtName)}\\s*$`),
+    });
+
+    const districtOption = await waitForVisibleLocator(
+      districtOptions,
+      `район «${districtName}»`
+    );
+
+    await districtOption.scrollIntoViewIfNeeded();
+    await districtOption.hover();
+
+    await pause(300, 600);
+
+    await districtOption.click({
+      timeout: 15_000,
+    });
+
+    addLog(`Район «${districtName}» выбран`);
+
+    await pause(700, 1_200);
+  }
+
+  await clickVisibleApplyButton(page, 'Районы', addLog);
+
+  addLog(`Выбраны районы: ${DISTRICTS.join(', ')}`);
+}
+
+/**
+ * Применение всех фильтров заявок.
+ */
+async function applyApplicationFilters(
+  page: Page,
+  addLog: LogCallback
+): Promise<void> {
+  addLog('Начинаю настройку фильтров заявок');
+
+  await selectCategory(page, addLog);
+
+  await selectStatus(page, addLog);
+
+  await selectDistricts(page, addLog);
+
+  addLog('Все фильтры успешно применены');
+}
+
+/**
+ * Здесь будет дальнейшая обработка заявок.
+ */
+async function processApplications(
+  page: Page,
+  addLog: LogCallback
+): Promise<void> {
+  addLog('Перехожу к обработке заявок');
+
+  await pause(1_000, 1_800);
+
+  addLog('Фильтры применены. Можно начинать поиск заявок');
+
+  /*
+   * Следующий этап:
+   *
+   * 1. найти карточки заявок;
+   * 2. определить количество заявок;
+   * 3. открыть первую заявку;
+   * 4. получить телефон;
+   * 5. изменить статус;
+   * 6. сохранить результат.
+   */
+
+  void page;
+}
+
+/**
+ * Главная функция автоматизации.
+ */
 export async function runEdsAutomation(addLog: LogCallback): Promise<void> {
-  let browser: Browser | undefined;
+  let browser: Browser | null = null;
+  let context: BrowserContext | null = null;
 
   try {
+    addLog('Проверяю конфигурацию');
+
+    const config = getEdsConfig();
+
     addLog('Запускаю Chromium');
 
     browser = await chromium.launch({
       headless: false,
-      slowMo: 100,
+      slowMo: 50,
     });
 
-    const context = await browser.newContext({
+    context = await browser.newContext({
       viewport: {
         width: 1440,
         height: 900,
@@ -112,24 +486,37 @@ export async function runEdsAutomation(addLog: LogCallback): Promise<void> {
 
     const page = await context.newPage();
 
-    await authorize(page, addLog);
+    page.setDefaultTimeout(15_000);
+    page.setDefaultNavigationTimeout(30_000);
 
-    for (const searchValue of SEARCH_VALUES) {
-      await searchApplications(page, searchValue, addLog);
-    }
+    await authorize(page, config, addLog);
 
-    addLog('Обработка звявок завершена');
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : 'Неизвестная ошибка';
+    await applyApplicationFilters(page, addLog);
+
+    await processApplications(page, addLog);
+
+    addLog('Сценарий успешно выполнен');
+
+    /*
+     * Временно оставляем страницу открытой,
+     * чтобы визуально проверить фильтры.
+     */
+    await pause(5_000, 7_000);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
 
     addLog(`Ошибка: ${message}`);
 
     throw error;
   } finally {
+    if (context) {
+      await context.close().catch(() => undefined);
+    }
+
     if (browser) {
       addLog('Закрываю браузер');
-      await browser.close();
+
+      await browser.close().catch(() => undefined);
     }
   }
 }
