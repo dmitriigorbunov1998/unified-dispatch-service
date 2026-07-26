@@ -23,15 +23,28 @@
   "lang.toggle": "Toggle Language",
   "logout.title": "Logout",
 
-  "dashboard.stats.total": "Total Tasks",
-  "dashboard.stats.success": "Success",
+  "dashboard.title": "Automation Dashboard",
+  "dashboard.description": "Start application processing, monitor script activity, and review results for the selected districts.",
+
+  "dashboard.stats.total": "Total Applications",
+  "dashboard.stats.success": "Successful",
   "dashboard.stats.skipped": "Skipped",
   "dashboard.stats.errors": "Errors",
   "dashboard.stats.session": "Current Session",
   "dashboard.stats.runs": "For {count} runs",
-  "dashboard.stats.noDataUK": "No UK data",
+  "dashboard.stats.noDataUK": "No management company data",
   "dashboard.stats.waiting": "Waiting",
   "dashboard.stats.of": "of {total}",
+  "dashboard.stats.currentRun": "During the current run",
+  "dashboard.stats.notProcessed": "Processing has not started yet",
+  "dashboard.stats.errorDetected": "An error was detected",
+  "dashboard.stats.noErrors": "No errors detected",
+
+  "automation.eyebrow": "Control",
+  "automation.title": "Automated Application Processing",
+  "automation.description": "The script signs in to UDS, applies the category, status and district filters, and then processes the matching applications.",
+  "automation.statusError": "Failed to retrieve script status",
+  "automation.startError": "Failed to start the script",
 
   "script.start": "Start Script",
   "script.stop": "Stop",
@@ -39,16 +52,34 @@
   "script.resume": "Resume",
   "script.export": "Export",
   "script.running": "Script is running...",
-
-  "tasks.title": "Processed Tasks",
-  "tasks.empty": "Tasks will appear after script launch",
-  "tasks.filter.all": "All",
-  "tasks.filter.success": "Success",
-  "tasks.filter.skipped": "Skipped",
-  "tasks.filter.errors": "Errors",
+  "script.ready": "Ready to start",
 
   "logs.title": "Execution Logs",
   "logs.clear": "Clear",
+  "logs.entries": "Entries: {count}",
+  "logs.emptyTitle": "No logs yet",
+  "logs.emptyDescription": "Script actions, selected filters, and error messages will appear here after launch.",
+  "logs.clearError": "Failed to clear logs",
+
+  "districts.eyebrow": "Districts",
+  "districts.title": "District Statistics",
+  "districts.total": "Total applications: {count}",
+  "districts.applications": "Applications found",
+  "districts.selected": "Selected Districts",
+  "districts.selectedDescription": "Used for application filtering",
+
+  "district.nemchinovka": "Nemchinovka",
+  "district.novoivanovskoe": "Novoivanovskoye",
+
+  "statistics.eyebrow": "Results",
+  "statistics.title": "General Statistics",
+
+  "tasks.title": "Processed Applications",
+  "tasks.empty": "Applications will appear after the script starts",
+  "tasks.filter.all": "All",
+  "tasks.filter.success": "Successful",
+  "tasks.filter.skipped": "Skipped",
+  "tasks.filter.errors": "Errors",
 
   "config.title": "Script Settings",
   "config.save": "Save Settings",
@@ -59,9 +90,11 @@
   "database.stats": "General Statistics",
   "database.byDistrict": "Statistics by District",
   "database.reset": "Reset",
-  "database.empty": "Data will appear after first launch",
+  "database.empty": "Data will appear after the first run",
   "database.lastRun": "Last Run",
-  "database.noData": "No launch data",
+  "database.noData": "No run data",
+
+  "common.unknownError": "Unknown error",
 
   "footer.tech": "React 19 • TypeScript • Vite"
 }
