@@ -1,34 +1,24 @@
-import { defineConfig, mergeConfig } from 'vitest/config';
+import { fileURLToPath } from 'node:url';
 
-import viteConfig from './vite.config';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vitest/config';
 
-export default mergeConfig(
-  viteConfig,
-  defineConfig({
-    test: {
-      globals: true,
-      environment: 'jsdom',
-      setupFiles: ['./src/test/setup.ts'],
+export default defineConfig({
+  plugins: [react()],
 
-      exclude: [
-        '**/node_modules/**',
-        '**/dist/**',
-        '**/e2e/**',
-        '**/tests/e2e/**',
-      ],
-
-      coverage: {
-        provider: 'v8',
-        reporter: ['text', 'json', 'html'],
-
-        exclude: [
-          '**/node_modules/**',
-          'src/test/**',
-          '**/*.d.ts',
-          '**/*.config.*',
-          '**/mockData/**',
-        ],
-      },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@shared': fileURLToPath(new URL('./src/shared', import.meta.url)),
     },
-  })
-);
+  },
+
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    css: true,
+
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
+  },
+});
