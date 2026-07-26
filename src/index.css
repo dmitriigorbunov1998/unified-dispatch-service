@@ -1,8 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-/* ===== Базовые неизменяемые переменные ===== */
+/* ============================================================
+   Base variables
+   ============================================================ */
+
 :root {
-  /* ===== Brand Colors ===== */
+  /* ===== Brand colors ===== */
   --brand-50: #eff6ff;
   --brand-100: #dbeafe;
   --brand-200: #bfdbfe;
@@ -14,7 +17,16 @@
   --brand-800: #1e40af;
   --brand-900: #1e3a8a;
 
-  /* ===== Status Colors ===== */
+  /* ===== Layout ===== */
+  --container-max-width: 1440px;
+  --container-padding: 24px;
+
+  /* ===== Header ===== */
+  --header-height: 64px;
+  --header-mobile-height: 132px;
+  --header-blur-extend: 12px;
+
+  /* ===== Status colors ===== */
   --emerald-300: #6ee7b7;
   --emerald-400: #34d399;
   --emerald-500: #10b981;
@@ -31,51 +43,54 @@
   --cyan-400: #22d3ee;
   --cyan-500: #06b6d4;
 
-  /* ===== Semantic Color Tokens (используются в компонентах) ===== */
-  /* StatsCard tokens */
-  --color-blue-border: rgba(59, 130, 246, 0.3);
-  --color-blue-glow: rgba(59, 130, 246, 0.4);
-  --color-blue-icon-bg: rgba(59, 130, 246, 0.15);
+  /* ===== StatsCard: blue ===== */
+  --color-blue-border: rgb(59 130 246 / 30%);
+  --color-blue-glow: rgb(59 130 246 / 40%);
+  --color-blue-icon-bg: rgb(59 130 246 / 15%);
   --color-blue-icon: var(--brand-400);
   --color-blue-value: var(--brand-300);
   --color-blue-subtitle: var(--brand-400);
-  --color-blue-trend-bg: rgba(59, 130, 246, 0.1);
+  --color-blue-trend-bg: rgb(59 130 246 / 10%);
   --color-blue-trend-text: var(--brand-400);
 
-  --color-green-border: rgba(16, 185, 129, 0.3);
-  --color-green-glow: rgba(16, 185, 129, 0.4);
-  --color-green-icon-bg: rgba(16, 185, 129, 0.15);
+  /* ===== StatsCard: green ===== */
+  --color-green-border: rgb(16 185 129 / 30%);
+  --color-green-glow: rgb(16 185 129 / 40%);
+  --color-green-icon-bg: rgb(16 185 129 / 15%);
   --color-green-icon: var(--emerald-400);
   --color-green-value: var(--emerald-300);
   --color-green-subtitle: var(--emerald-400);
-  --color-green-trend-bg: rgba(16, 185, 129, 0.1);
+  --color-green-trend-bg: rgb(16 185 129 / 10%);
   --color-green-trend-text: var(--emerald-400);
 
-  --color-yellow-border: rgba(245, 158, 11, 0.3);
-  --color-yellow-glow: rgba(245, 158, 11, 0.4);
-  --color-yellow-icon-bg: rgba(245, 158, 11, 0.15);
+  /* ===== StatsCard: yellow ===== */
+  --color-yellow-border: rgb(245 158 11 / 30%);
+  --color-yellow-glow: rgb(245 158 11 / 40%);
+  --color-yellow-icon-bg: rgb(245 158 11 / 15%);
   --color-yellow-icon: var(--amber-400);
   --color-yellow-value: var(--amber-300);
   --color-yellow-subtitle: var(--amber-400);
-  --color-yellow-trend-bg: rgba(245, 158, 11, 0.1);
+  --color-yellow-trend-bg: rgb(245 158 11 / 10%);
   --color-yellow-trend-text: var(--amber-400);
 
-  --color-red-border: rgba(239, 68, 68, 0.3);
-  --color-red-glow: rgba(239, 68, 68, 0.4);
-  --color-red-icon-bg: rgba(239, 68, 68, 0.15);
+  /* ===== StatsCard: red ===== */
+  --color-red-border: rgb(239 68 68 / 30%);
+  --color-red-glow: rgb(239 68 68 / 40%);
+  --color-red-icon-bg: rgb(239 68 68 / 15%);
   --color-red-icon: var(--red-400);
   --color-red-value: var(--red-300);
   --color-red-subtitle: var(--red-400);
-  --color-red-trend-bg: rgba(239, 68, 68, 0.1);
+  --color-red-trend-bg: rgb(239 68 68 / 10%);
   --color-red-trend-text: var(--red-400);
 
-  --color-cyan-border: rgba(6, 182, 212, 0.3);
-  --color-cyan-glow: rgba(6, 182, 212, 0.4);
-  --color-cyan-icon-bg: rgba(6, 182, 212, 0.15);
+  /* ===== StatsCard: cyan ===== */
+  --color-cyan-border: rgb(6 182 212 / 30%);
+  --color-cyan-glow: rgb(6 182 212 / 40%);
+  --color-cyan-icon-bg: rgb(6 182 212 / 15%);
   --color-cyan-icon: var(--cyan-400);
   --color-cyan-value: var(--cyan-300);
   --color-cyan-subtitle: var(--cyan-400);
-  --color-cyan-trend-bg: rgba(6, 182, 212, 0.1);
+  --color-cyan-trend-bg: rgb(6 182 212 / 10%);
   --color-cyan-trend-text: var(--cyan-400);
 
   /* ===== Radius ===== */
@@ -92,113 +107,136 @@
   /* ===== Glassmorphism ===== */
   --glass-blur: 20px;
   --glass-blur-heavy: 40px;
-
-  /* ===== Header ===== */
-  --header-height: 64px;
-  --header-blur-extend: 12px;
 }
 
-/* ===== Тёмная тема (по умолчанию) ===== */
+/* ============================================================
+   Dark theme
+   ============================================================ */
+
 :root,
 [data-theme='dark'] {
-  --bg-primary: #000000;
+  color-scheme: dark;
+
+  --bg-primary: #000;
   --bg-secondary: #1c1c1e;
   --bg-tertiary: #2c2c2e;
   --bg-card: #1a1a1a;
   --bg-input: #1c1c1e;
   --bg-elevated: #2c2c2e;
 
-  --glass-bg: rgba(28, 28, 30, 0.7);
-  --glass-bg-heavy: rgba(28, 28, 30, 0.85);
-  --glass-bg-light: rgba(28, 28, 30, 0.5);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-light: rgba(255, 255, 255, 0.05);
-  --glass-highlight: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgb(28 28 30 / 70%);
+  --glass-bg-heavy: rgb(28 28 30 / 85%);
+  --glass-bg-light: rgb(28 28 30 / 50%);
+  --glass-border: rgb(255 255 255 / 8%);
+  --glass-border-light: rgb(255 255 255 / 5%);
+  --glass-highlight: rgb(255 255 255 / 10%);
 
-  --text-primary: #ffffff;
+  --text-primary: #fff;
   --text-secondary: #e5e5e5;
   --text-tertiary: #a3a3a3;
   --text-muted: #737373;
   --text-faint: #525252;
 
-  --border-primary: rgba(255, 255, 255, 0.1);
+  --border-primary: rgb(255 255 255 / 10%);
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
-  --shadow-brand: 0 8px 32px rgba(59, 130, 246, 0.3);
+  --shadow-sm: 0 2px 8px rgb(0 0 0 / 30%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 40%);
+  --shadow-lg: 0 16px 48px rgb(0 0 0 / 50%);
+  --shadow-brand: 0 8px 32px rgb(59 130 246 / 30%);
 
-  --stats-card-bg: rgba(28, 28, 30, 0.7);
+  --stats-card-bg: rgb(28 28 30 / 70%);
+
+  --scrollbar-thumb: rgb(255 255 255 / 15%);
+  --scrollbar-thumb-hover: rgb(255 255 255 / 25%);
 }
 
-/* ===== Светлая тема ===== */
+/* ============================================================
+   Light theme
+   ============================================================ */
+
 [data-theme='light'],
 [data-theme='system'] {
-  --bg-primary: #ffffff;
+  color-scheme: light;
+
+  --bg-primary: #fff;
   --bg-secondary: #f5f5f7;
-  --bg-tertiary: #ffffff;
-  --bg-card: #ffffff;
+  --bg-tertiary: #fff;
+  --bg-card: #fff;
   --bg-input: #f5f5f7;
-  --bg-elevated: #ffffff;
+  --bg-elevated: #fff;
 
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-bg-heavy: rgba(255, 255, 255, 0.9);
-  --glass-bg-light: rgba(255, 255, 255, 0.5);
-  --glass-border: rgba(0, 0, 0, 0.06);
-  --glass-border-light: rgba(0, 0, 0, 0.04);
-  --glass-highlight: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgb(255 255 255 / 70%);
+  --glass-bg-heavy: rgb(255 255 255 / 90%);
+  --glass-bg-light: rgb(255 255 255 / 50%);
+  --glass-border: rgb(0 0 0 / 6%);
+  --glass-border-light: rgb(0 0 0 / 4%);
+  --glass-highlight: rgb(0 0 0 / 5%);
 
-  --text-primary: #000000;
-  --text-secondary: #333333;
-  --text-tertiary: #666666;
+  --text-primary: #000;
+  --text-secondary: #333;
+  --text-tertiary: #666;
   --text-muted: #8e8e93;
   --text-faint: #c7c7cc;
 
-  --border-primary: rgba(0, 0, 0, 0.1);
+  --border-primary: rgb(0 0 0 / 10%);
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.08);
-  --shadow-brand: 0 8px 32px rgba(59, 130, 246, 0.15);
+  --shadow-sm: 0 2px 8px rgb(0 0 0 / 4%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 6%);
+  --shadow-lg: 0 16px 48px rgb(0 0 0 / 8%);
+  --shadow-brand: 0 8px 32px rgb(59 130 246 / 15%);
 
-  --stats-card-bg: rgba(255, 255, 255, 0.8);
+  --stats-card-bg: rgb(255 255 255 / 80%);
+
+  --scrollbar-thumb: rgb(0 0 0 / 15%);
+  --scrollbar-thumb-hover: rgb(0 0 0 / 25%);
 }
 
-/* Системная тема: переопределяется на тёмную */
+/* ============================================================
+   System theme: dark operating system
+   ============================================================ */
+
 @media (prefers-color-scheme: dark) {
   [data-theme='system'] {
-    --bg-primary: #000000;
+    color-scheme: dark;
+
+    --bg-primary: #000;
     --bg-secondary: #1c1c1e;
     --bg-tertiary: #2c2c2e;
     --bg-card: #1a1a1a;
     --bg-input: #1c1c1e;
     --bg-elevated: #2c2c2e;
 
-    --glass-bg: rgba(28, 28, 30, 0.7);
-    --glass-bg-heavy: rgba(28, 28, 30, 0.85);
-    --glass-bg-light: rgba(28, 28, 30, 0.5);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-border-light: rgba(255, 255, 255, 0.05);
-    --glass-highlight: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgb(28 28 30 / 70%);
+    --glass-bg-heavy: rgb(28 28 30 / 85%);
+    --glass-bg-light: rgb(28 28 30 / 50%);
+    --glass-border: rgb(255 255 255 / 8%);
+    --glass-border-light: rgb(255 255 255 / 5%);
+    --glass-highlight: rgb(255 255 255 / 10%);
 
-    --text-primary: #ffffff;
+    --text-primary: #fff;
     --text-secondary: #e5e5e5;
     --text-tertiary: #a3a3a3;
     --text-muted: #737373;
     --text-faint: #525252;
 
-    --border-primary: rgba(255, 255, 255, 0.1);
+    --border-primary: rgb(255 255 255 / 10%);
 
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
-    --shadow-brand: 0 8px 32px rgba(59, 130, 246, 0.3);
+    --shadow-sm: 0 2px 8px rgb(0 0 0 / 30%);
+    --shadow-md: 0 8px 24px rgb(0 0 0 / 40%);
+    --shadow-lg: 0 16px 48px rgb(0 0 0 / 50%);
+    --shadow-brand: 0 8px 32px rgb(59 130 246 / 30%);
 
-    --stats-card-bg: rgba(28, 28, 30, 0.7);
+    --stats-card-bg: rgb(28 28 30 / 70%);
+
+    --scrollbar-thumb: rgb(255 255 255 / 15%);
+    --scrollbar-thumb-hover: rgb(255 255 255 / 25%);
   }
 }
 
-/* ===== Reset & Base ===== */
+/* ============================================================
+   Reset
+   ============================================================ */
+
 *,
 *::before,
 *::after {
@@ -208,45 +246,114 @@
 }
 
 html {
+  min-height: 100%;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+
   font-size: 16px;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
 }
 
+body,
+#root {
+  min-height: 100%;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+/* ============================================================
+   Base document styles
+   ============================================================ */
+
 body {
+  min-height: 100dvh;
+  overflow-x: clip;
+
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+
   font-family:
     'Inter',
     -apple-system,
     BlinkMacSystemFont,
     'SF Pro Display',
+    'Segoe UI',
     sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-secondary);
+
   line-height: 1.5;
-  min-height: 100dvh;
+
   transition:
     background-color var(--transition-slow),
     color var(--transition);
-  overflow-x: hidden;
 }
 
-/* ===== Animations ===== */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================================================
+   Container breakpoints
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  :root {
+    --container-padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --container-padding: 12px;
+  }
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+
 .animate-slide-in {
   opacity: 0;
   transform: translate3d(0, 8px, 0);
-  animation: slideIn 0.3s ease-out forwards;
+  animation: slideIn 300ms ease-out forwards;
 }
 
 .animate-slide-up {
   opacity: 0;
   transform: translate3d(0, 100%, 0);
-  animation: slideUp 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  animation: slideUp 400ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 .animate-fade-in {
   opacity: 0;
-  animation: fadeIn 0.3s ease-out forwards;
+  animation: fadeIn 300ms ease-out forwards;
 }
 
 .animate-pulse {
@@ -261,9 +368,13 @@ body {
   animation: bounce 1s ease-in-out infinite;
 }
 
-/* ===== Scrollbar ===== */
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -271,30 +382,25 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
   border-radius: 3px;
+  background: var(--scrollbar-thumb);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--scrollbar-thumb-hover);
 }
 
-[data-theme='light'] ::-webkit-scrollbar-thumb,
-[data-theme='system'] ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
-}
+/* ============================================================
+   Reduced motion
+   ============================================================ */
 
-[data-theme='light'] ::-webkit-scrollbar-thumb:hover,
-[data-theme='system'] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
-}
-
-@media (prefers-color-scheme: dark) {
-  [data-theme='system'] ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
-  }
-
-  [data-theme='system'] ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.25);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

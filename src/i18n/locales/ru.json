@@ -23,6 +23,9 @@
   "lang.toggle": "Переключить язык",
   "logout.title": "Выйти",
 
+  "dashboard.title": "Панель автоматизации",
+  "dashboard.description": "Запускайте обработку заявок, отслеживайте действия скрипта и контролируйте результаты по выбранным районам.",
+
   "dashboard.stats.total": "Всего заявок",
   "dashboard.stats.success": "Успешно",
   "dashboard.stats.skipped": "Пропущено",
@@ -32,6 +35,16 @@
   "dashboard.stats.noDataUK": "Нет данных от УК",
   "dashboard.stats.waiting": "Ожидание",
   "dashboard.stats.of": "из {total}",
+  "dashboard.stats.currentRun": "В текущем запуске",
+  "dashboard.stats.notProcessed": "Обработка ещё не выполнялась",
+  "dashboard.stats.errorDetected": "Обнаружена ошибка",
+  "dashboard.stats.noErrors": "Ошибок не обнаружено",
+
+  "automation.eyebrow": "Управление",
+  "automation.title": "Автоматическая обработка заявок",
+  "automation.description": "Скрипт авторизуется в ЕДС, применяет категорию, статус и районы, после чего начинает обработку найденных заявок.",
+  "automation.statusError": "Не удалось получить статус скрипта",
+  "automation.startError": "Не удалось запустить скрипт",
 
   "script.start": "Запустить скрипт",
   "script.stop": "Остановить",
@@ -39,6 +52,27 @@
   "script.resume": "Продолжить",
   "script.export": "Экспорт",
   "script.running": "Скрипт выполняется...",
+  "script.ready": "Готов к запуску",
+
+  "logs.title": "Логи выполнения",
+  "logs.clear": "Очистить",
+  "logs.entries": "Записей: {count}",
+  "logs.emptyTitle": "Логи пока отсутствуют",
+  "logs.emptyDescription": "После запуска здесь появятся действия скрипта, выбранные фильтры и сообщения об ошибках.",
+  "logs.clearError": "Не удалось очистить логи",
+
+  "districts.eyebrow": "Районы",
+  "districts.title": "Статистика по районам",
+  "districts.total": "Всего заявок: {count}",
+  "districts.applications": "Найдено заявок",
+  "districts.selected": "Выбрано районов",
+  "districts.selectedDescription": "Используются при фильтрации заявок",
+
+  "district.nemchinovka": "Немчиновка",
+  "district.novoivanovskoe": "Новоивановское",
+
+  "statistics.eyebrow": "Результаты",
+  "statistics.title": "Общая статистика",
 
   "tasks.title": "Обработанные заявки",
   "tasks.empty": "Заявки появятся после запуска скрипта",
@@ -46,9 +80,6 @@
   "tasks.filter.success": "Успешно",
   "tasks.filter.skipped": "Пропущено",
   "tasks.filter.errors": "Ошибки",
-
-  "logs.title": "Логи выполнения",
-  "logs.clear": "Очистить",
 
   "config.title": "Настройки скрипта",
   "config.save": "Сохранить настройки",
@@ -62,6 +93,8 @@
   "database.empty": "Данные появятся после первого запуска",
   "database.lastRun": "Последний запуск",
   "database.noData": "Нет данных о запусках",
+
+  "common.unknownError": "Неизвестная ошибка",
 
   "footer.tech": "React 19 • TypeScript • Vite"
 }
