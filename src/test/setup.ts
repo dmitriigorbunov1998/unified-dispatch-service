@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 
 import { cleanup } from '@testing-library/react';
-import { afterEach, afterAll, beforeAll } from 'vitest';
+import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 
 import { server } from '@/test/mocks/server.ts';
 
@@ -22,20 +22,31 @@ afterAll(() => {
 
 const localStorageMock = {
   store: {} as Record<string, string>,
-  getItem(key: string) {
-    return this.store[key] || null;
+
+  getItem(key: string): string | null {
+    return this.store[key] ?? null;
   },
-  setItem(key: string, value: string) {
+
+  setItem(key: string, value: string): void {
     this.store[key] = value;
   },
-  removeItem(key: string) {
+
+  removeItem(key: string): void {
     delete this.store[key];
   },
-  clear() {
+
+  clear(): void {
     this.store = {};
   },
 };
 
 Object.defineProperty(window, 'localStorage', {
+  configurable: true,
   value: localStorageMock,
+});
+
+Object.defineProperty(HTMLElement.prototype, 'scrollTo', {
+  configurable: true,
+  writable: true,
+  value: vi.fn(),
 });

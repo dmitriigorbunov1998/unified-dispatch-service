@@ -80,7 +80,7 @@ export function Dashboard() {
       const response = await fetch('/api/automation/status');
 
       if (!response.ok) {
-        throw new Error(t('automation.statusError'));
+        setError(t('automation.statusError'));
       }
 
       const status: AutomationStatus = await response.json();
@@ -135,16 +135,26 @@ export function Dashboard() {
    * прокручиваем окно логов вниз.
    */
   useEffect(() => {
+    if (logs.length === 0) {
+      return;
+    }
+
     const logsContent = logsContentRef.current;
 
     if (!logsContent) {
       return;
     }
 
-    logsContent.scrollTo({
-      top: logsContent.scrollHeight,
-      behavior: 'smooth',
-    });
+    if (typeof logsContent.scrollTo === 'function') {
+      logsContent.scrollTo({
+        top: logsContent.scrollHeight,
+        behavior: 'smooth',
+      });
+
+      return;
+    }
+
+    logsContent.scrollTop = logsContent.scrollHeight;
   }, [logs]);
 
   const handleStart = async (): Promise<void> => {
@@ -191,7 +201,7 @@ export function Dashboard() {
       if (!response.ok) {
         const data: MessageResponse = await response.json();
 
-        throw new Error(data.message ?? t('logs.clearError'));
+        setError(data.message ?? t('logs.clearError'));
       }
 
       setLogs([]);

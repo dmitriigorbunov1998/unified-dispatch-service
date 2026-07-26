@@ -9,7 +9,7 @@ describe('Dashboard', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: /добро пожаловать/i,
+        name: /панель автоматизации/i,
       })
     ).toBeInTheDocument();
 
