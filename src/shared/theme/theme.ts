@@ -34,6 +34,20 @@ export function getThemeIcon(theme: Theme): LucideIcon {
   );
 }
 
+export function getDefaultTheme(): Theme {
+  const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+
+  if (
+    savedTheme === 'light' ||
+    savedTheme === 'dark' ||
+    savedTheme === 'system'
+  ) {
+    return savedTheme;
+  }
+
+  return 'system';
+}
+
 export function getSystemTheme(): 'light' | 'dark' {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'

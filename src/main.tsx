@@ -1,25 +1,21 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
-import App from './App.tsx';
-import { ThemeProvider } from '@/context/ThemeProvider.tsx';
 
-// Set initial theme before React renders (Избегаем миганий при смене тем)
-const savedTheme = localStorage.getItem('theme') || 'system';
-if (savedTheme === 'system') {
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  document.documentElement.setAttribute(
-    'data-theme',
-    isDark ? 'dark' : 'light'
-  );
-} else {
-  document.documentElement.setAttribute('data-theme', savedTheme);
+import { App } from '@/app/App';
+import { AppProviders } from '@/app/providers/AppProviders.tsx';
+
+import './index.css';
+
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('Root element was not found');
 }
 
-createRoot(document.getElementById('root')!).render(
+createRoot(rootElement).render(
   <StrictMode>
-    <ThemeProvider>
+    <AppProviders>
       <App />
-    </ThemeProvider>
+    </AppProviders>
   </StrictMode>
 );
