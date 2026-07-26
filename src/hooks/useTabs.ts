@@ -1,24 +1,39 @@
-import { Activity, Settings, Database } from 'lucide-react';
-import { useTranslation } from '@/i18n';
+import { Activity, Database, Settings } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
+import { useTranslation } from '@/i18n';
+
+export type TabId = 'dashboard' | 'settings' | 'database';
+
 export interface Tab {
-  id: string;
+  id: TabId;
   label: string;
   title: string;
   icon: LucideIcon;
 }
 
 interface TabConfig {
-  id: string;
+  id: TabId;
   labelKey: string;
   icon: LucideIcon;
 }
 
 const TAB_CONFIGS: TabConfig[] = [
-  { id: 'dashboard', labelKey: 'nav.dashboard', icon: Activity },
-  { id: 'config', labelKey: 'nav.settings', icon: Settings },
-  { id: 'database', labelKey: 'nav.database', icon: Database },
+  {
+    id: 'dashboard',
+    labelKey: 'nav.dashboard',
+    icon: Activity,
+  },
+  {
+    id: 'settings',
+    labelKey: 'nav.settings',
+    icon: Settings,
+  },
+  {
+    id: 'database',
+    labelKey: 'nav.database',
+    icon: Database,
+  },
 ];
 
 export function useTabs() {
