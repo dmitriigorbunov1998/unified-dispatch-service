@@ -30,12 +30,14 @@ test.describe('Header', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   });
 
-  test('switches active tab', async ({ page }) => {
-    const configTab = page.getByTestId('header-tab-config');
+  test('switches active tab and updates URL', async ({ page }) => {
+    const settingsTab = page.getByTestId('header-tab-settings');
 
-    await configTab.click();
+    await settingsTab.click();
 
-    await expect(configTab).toHaveAttribute('aria-current', 'page');
+    await expect(page).toHaveURL('/settings');
+
+    await expect(settingsTab).toHaveAttribute('aria-current', 'page');
   });
 
   test('changes and persists theme', async ({ page }) => {
