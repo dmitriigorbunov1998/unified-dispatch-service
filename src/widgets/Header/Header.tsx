@@ -90,7 +90,6 @@ export function Header({
               } as React.CSSProperties
             }
           >
-            {/*<span className="header-navigation-glass" aria-hidden="true" />*/}
             <span className="header-tab-indicator" aria-hidden="true" />
             {tabs.map(({ id, label, title, icon: TabIcon }) => {
               const isActive = activeTab === id;
