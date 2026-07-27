@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppLayout } from '@/app/layout/AppLayout';
+import { Home } from '@/pages/Home/Home';
 import { Dashboard } from '@/pages/Dashboard/Dashboard';
 import { Settings } from '@/pages/Settings/Settings';
 import { Database } from '@/pages/Database/Database';
@@ -15,7 +16,9 @@ export function App() {
   return (
     <AppLayout onLogout={handleLogout}>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
+
+        <Route path="/home" element={<Home />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
 

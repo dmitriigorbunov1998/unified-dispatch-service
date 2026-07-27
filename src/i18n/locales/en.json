@@ -6,6 +6,7 @@
   "status.title": "Running",
   "status.idle": "Idle",
 
+  "nav.home": "Home",
   "nav.dashboard": "Dashboard",
   "nav.settings": "Settings",
   "nav.database": "Database",

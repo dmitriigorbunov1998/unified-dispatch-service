@@ -76,7 +76,7 @@
   width: 40px;
   height: 40px;
 
-  border-radius: var(--radius-md);
+  border-radius: 24px;
   background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
   box-shadow: var(--shadow-brand);
 
@@ -171,7 +171,7 @@
 
   padding: 8px 16px;
 
-  border-radius: var(--radius-md);
+  border-radius: 24px;
   background: transparent;
 
   color: var(--text-muted);
@@ -215,7 +215,7 @@
 
   padding: 6px;
 
-  border-radius: var(--radius-md);
+  border-radius: 24px;
   background: rgba(255 255 255 / 4%);
 }
 
@@ -227,7 +227,7 @@
   width: 28px;
   height: 28px;
 
-  border-radius: var(--radius-sm);
+  border-radius: 24px;
   background: linear-gradient(135deg, var(--brand-400), var(--brand-600));
 
   color: #fff;
@@ -257,7 +257,7 @@
   min-height: 36px;
   padding: 8px;
 
-  border-radius: var(--radius-md);
+  border-radius: 24px;
   background: rgba(255 255 255 / 4%);
 
   color: var(--text-muted);
@@ -333,6 +333,13 @@
   color: var(--brand-400);
 }
 
+@media (max-width: 1440px) {
+  .header-title,
+  .header-subtitle {
+    display: none;
+  }
+}
+
 @media (max-width: 1200px) {
   .header-tab {
     width: 42px;
@@ -373,8 +380,11 @@
   }
 
   .header-inner {
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     align-content: center;
+    justify-content: space-between;
 
     height: auto;
     min-height: var(--header-mobile-height, 132px);
@@ -382,11 +392,13 @@
     padding-block: 8px 10px;
     padding-inline: var(--container-padding, 16px);
 
+    column-gap: 8px;
     gap: 12px 0;
   }
 
   .header-left {
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .header-actions {
@@ -395,28 +407,84 @@
   }
 
   .header-navigation {
-    order: 3;
-    flex: 0 0 100%;
+    --tabs-count: 4;
+    --active-tab-index: 0;
 
-    width: 100%;
-    gap: 8px;
-    padding: 0;
+    position: relative;
+    order: 3;
+
+    display: grid;
+    grid-template-columns: repeat(var(--tabs-count), minmax(0, 1fr));
+
+    flex: 0 0 100%;
+    gap: 0;
+
+    padding: 4px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-full);
+    background: rgba(255 255 255 / 4%);
+    box-shadow: inset 0 1px 0 rgba(255 255 255 / 5%);
+
+    isolation: isolate;
+  }
+
+  .header-tab-indicator {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    z-index: -1;
+
+    width: calc((100% - 8px) / var(--tabs-count));
+    max-width: 100%;
+
+    border-radius: var(--radius-full);
+    background: rgba(59 130 246 / 18%);
+    box-shadow:
+      0 4px 16px rgba(59 130 246 / 20%),
+      inset 0 1px 0 rgba(255 255 255 / 10%);
+    transform: translateX(calc(var(--active-tab-index) * 100%));
+    transition:
+      transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 350ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .header-tab {
-    flex: 1 1 0;
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
+    gap: 4px;
+
+    min-width: 0;
+    padding: 8px 16px;
+
+    border-radius: var(--radius-full);
+    background: transparent;
+
+    flex: 1 1 0;
 
     width: auto;
-    min-width: 0;
     height: auto;
 
-    gap: 4px;
-    padding: 8px 4px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      color var(--transition),
+      transform var(--transition);
+  }
 
-    border: 1px solid var(--border-primary);
-    background: var(--glass-bg-heavy);
-    box-shadow: 0 4px 16px rgba(0 0 0 / 25%);
+  .header-tab:hover {
+    background: rgb(59 130 246 / 22%);
+    color: var(--text-secondary);
   }
 
   .header-tab-label {
@@ -432,23 +500,18 @@
   }
 
   .header-tab.active {
-    border-color: rgb(59 130 246 / 45%);
-    background: rgb(59 130 246 / 22%);
-    box-shadow: 0 4px 20px rgb(59 130 246 / 30%);
+    background: transparent;
+    color: var(--brand-400);
+  }
+
+  .header-tab:active {
+    transform: scale(0.96);
   }
 }
 
 @media (max-width: 480px) {
   .header-inner {
     padding-inline: var(--container-padding, 12px);
-  }
-
-  .header-status {
-    padding-inline: 8px;
-  }
-
-  .header-status-text {
-    display: none;
   }
 
   .header-tab-label {
