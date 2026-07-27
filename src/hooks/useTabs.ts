@@ -1,9 +1,9 @@
-import { Activity, Database, Settings } from 'lucide-react';
+import { Home, Activity, Database, Settings } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 import { useTranslation } from '@/i18n';
 
-export type TabId = 'dashboard' | 'settings' | 'database';
+export type TabId = 'home' | 'dashboard' | 'settings' | 'database';
 
 export interface Tab {
   id: TabId;
@@ -19,6 +19,11 @@ interface TabConfig {
 }
 
 const TAB_CONFIGS: TabConfig[] = [
+  {
+    id: 'home',
+    labelKey: 'nav.home',
+    icon: Home,
+  },
   {
     id: 'dashboard',
     labelKey: 'nav.dashboard',

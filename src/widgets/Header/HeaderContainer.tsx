@@ -9,12 +9,14 @@ import { useTheme } from '@/hooks/useTheme';
 import { getThemeIcon, THEME_OPTIONS } from '@shared/theme/theme';
 
 const TAB_ROUTES: Record<TabId, string> = {
+  home: '/home',
   dashboard: '/dashboard',
   settings: '/settings',
   database: '/database',
 };
 
 const ROUTE_TABS: Record<string, TabId> = {
+  '/home': 'home',
   '/dashboard': 'dashboard',
   '/settings': 'settings',
   '/database': 'database',

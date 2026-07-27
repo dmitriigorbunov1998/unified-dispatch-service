@@ -6,6 +6,7 @@
   "status.title": "Работает",
   "status.idle": "Ожидание",
 
+  "nav.home": "Главная",
   "nav.dashboard": "Панель управления",
   "nav.settings": "Настройки",
   "nav.database": "База данных",

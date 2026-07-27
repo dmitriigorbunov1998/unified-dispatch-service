@@ -25,6 +25,42 @@ export function Header({
       <div className="header-background" />
       <div className="header-border" />
 
+      <svg
+        aria-hidden="true"
+        width="0"
+        height="0"
+        className="liquid-glass-filters"
+      >
+        <defs>
+          <filter
+            id="liquid-glass-distortion"
+            x="-20%"
+            y="-50%"
+            width="140%"
+            height="200%"
+            colorInterpolationFilters="sRGB"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.008 0.025"
+              numOctaves="2"
+              seed="7"
+              result="noise"
+            />
+
+            <feGaussianBlur in="noise" stdDeviation="1.5" result="softNoise" />
+
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="softNoise"
+              scale="18"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+          </filter>
+        </defs>
+      </svg>
+
       <header className="header">
         <div className="header-inner">
           <div className="header-left">
@@ -41,7 +77,21 @@ export function Header({
             </div>
           </div>
 
-          <nav className="header-navigation" aria-label={t('nav.title')}>
+          <nav
+            className="header-navigation"
+            aria-label={t('nav.title')}
+            style={
+              {
+                '--active-tab-index': Math.max(
+                  tabs.findIndex((tab) => tab.id === activeTab),
+                  0
+                ),
+                '--tabs-count': tabs.length,
+              } as React.CSSProperties
+            }
+          >
+            {/*<span className="header-navigation-glass" aria-hidden="true" />*/}
+            <span className="header-tab-indicator" aria-hidden="true" />
             {tabs.map(({ id, label, title, icon: TabIcon }) => {
               const isActive = activeTab === id;
 
