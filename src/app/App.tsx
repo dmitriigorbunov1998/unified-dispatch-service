@@ -7,6 +7,7 @@ import { Settings } from '@/pages/Settings/Settings';
 import { Database } from '@/pages/Database/Database';
 
 import './App.css';
+import { Landing } from '@pages/Landing/Landing.tsx';
 
 export function App() {
   const handleLogout = () => {
@@ -16,7 +17,9 @@ export function App() {
   return (
     <AppLayout onLogout={handleLogout}>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/" element={<Navigate to="/" replace />} />
+
+        <Route path="/landing" element={<Landing />} />
 
         <Route path="/home" element={<Home />} />
 
@@ -26,7 +29,7 @@ export function App() {
 
         <Route path="/database" element={<Database />} />
 
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AppLayout>
   );
