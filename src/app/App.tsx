@@ -15,12 +15,12 @@ export function App() {
   };
 
   return (
-    <AppLayout onLogout={handleLogout}>
-      <Routes>
-        <Route path="/" element={<Navigate to="/" replace />} />
+    <Routes>
+      {/* Обособленная публичная страница */}
+      <Route path="/" element={<Landing />} />
 
-        <Route path="/landing" element={<Landing />} />
-
+      {/* Страницы основного приложения с Header */}
+      <Route element={<AppLayout onLogout={handleLogout} />}>
         <Route path="/home" element={<Home />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
@@ -28,9 +28,8 @@ export function App() {
         <Route path="/settings" element={<Settings />} />
 
         <Route path="/database" element={<Database />} />
-
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AppLayout>
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
