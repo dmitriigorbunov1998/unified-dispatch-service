@@ -1,8 +1,6 @@
 import { HeaderContainer } from '@/widgets/Header/HeaderContainer';
-
-import './AppLayout.css';
-
 import { Outlet } from 'react-router-dom';
+import './AppLayout.css';
 
 interface AppLayoutProps {
   onLogout?: () => void;
