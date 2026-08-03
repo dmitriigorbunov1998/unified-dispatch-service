@@ -7,7 +7,7 @@ import { Settings } from '@/pages/Settings/Settings';
 import { Database } from '@/pages/Database/Database';
 
 import './App.css';
-import { Landing } from '@pages/Landing/Landing.tsx';
+import { Landing } from '@pages/Landing/Landing';
 
 export function App() {
   const handleLogout = () => {
