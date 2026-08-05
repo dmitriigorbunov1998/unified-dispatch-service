@@ -1,33 +1,25 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppLayout } from '@/app/layout/AppLayout';
-import { Home } from '@/pages/Home/Home';
-import { Dashboard } from '@/pages/Dashboard/Dashboard';
-import { Settings } from '@/pages/Settings/Settings';
-import { Database } from '@/pages/Database/Database';
+import { HomeContainer } from '@/pages/Home/HomeContainer';
+import { DashboardContainer } from '@/pages/Dashboard/DashboardContainer';
+import { SettingsContainer } from '@/pages/Settings/SettingsContainer';
+import { DatabaseContainer } from '@/pages/Database/DatabaseContainer';
 
 import './App.css';
-import { Landing } from '@pages/Landing/Landing';
 
 export function App() {
-  const handleLogout = () => {
-    console.log('Logout');
-  };
-
   return (
     <Routes>
-      {/* Обособленная публичная страница */}
-      <Route path="/" element={<Landing />} />
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<HomeContainer />} />
 
-      {/* Страницы основного приложения с Header */}
-      <Route element={<AppLayout onLogout={handleLogout} />}>
-        <Route path="/home" element={<Home />} />
+        <Route path="/dashboard" element={<DashboardContainer />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/database" element={<DatabaseContainer />} />
 
-        <Route path="/settings" element={<Settings />} />
-
-        <Route path="/database" element={<Database />} />
+        <Route path="/settings" element={<SettingsContainer />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

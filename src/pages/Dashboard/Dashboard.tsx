@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertCircle,
   Building2,
@@ -15,208 +14,24 @@ import {
   Zap,
 } from 'lucide-react';
 
-import { useTranslation } from '@/i18n';
 import { StatsCard } from '@/widgets/StatsCard/StatsCard';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
+import type { DashboardProps } from './Dashboard.types';
 
 import './Dashboard.css';
 
-type AutomationStatus = {
-  isRunning: boolean;
-  logs: string[];
-};
-
-type MessageResponse = {
-  message?: string;
-};
-
-type DistrictStat = {
-  id: 'nemchinovka' | 'novoivanovskoe';
-  nameKey: 'district.nemchinovka' | 'district.novoivanovskoe';
-  applicationsCount: number;
-  color: 'blue' | 'cyan';
-};
-
-const DISTRICT_STATS: DistrictStat[] = [
-  {
-    id: 'nemchinovka',
-    nameKey: 'district.nemchinovka',
-    applicationsCount: 0,
-    color: 'blue',
-  },
-  {
-    id: 'novoivanovskoe',
-    nameKey: 'district.novoivanovskoe',
-    applicationsCount: 0,
-    color: 'cyan',
-  },
-];
-
-export function Dashboard() {
-  const [logs, setLogs] = useState<string[]>([]);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [isClearingLogs, setIsClearingLogs] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const logsContentRef = useRef<HTMLDivElement | null>(null);
-
-  const { t } = useTranslation();
-
-  const totalApplications = useMemo(() => {
-    return DISTRICT_STATS.reduce(
-      (total, district) => total + district.applicationsCount,
-      0
-    );
-  }, []);
-
-  const translateCount = useCallback(
-    (key: string, count: number): string => {
-      return t(key).replace('{count}', String(count));
-    },
-    [t]
-  );
-
-  const getAutomationStatus = useCallback(async (): Promise<void> => {
-    try {
-      const response = await fetch('/api/automation/status');
-
-      if (!response.ok) {
-        setError(t('automation.statusError'));
-      }
-
-      const status: AutomationStatus = await response.json();
-
-      setLogs(status.logs);
-      setIsRunning(status.isRunning);
-    } catch (requestError: unknown) {
-      const message =
-        requestError instanceof Error
-          ? requestError.message
-          : t('common.unknownError');
-
-      setError(message);
-      setIsRunning(false);
-    }
-  }, [t]);
-
-  /*
-   * Получаем текущее состояние один раз
-   * при первом открытии Dashboard.
-   */
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      void getAutomationStatus();
-    }, 0);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [getAutomationStatus]);
-
-  /*
-   * Пока скрипт работает, обновляем состояние
-   * и логи один раз в секунду.
-   */
-  useEffect(() => {
-    if (!isRunning) {
-      return;
-    }
-
-    const intervalId = window.setInterval(() => {
-      void getAutomationStatus();
-    }, 1_000);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, [getAutomationStatus, isRunning]);
-
-  /*
-   * При появлении новых записей автоматически
-   * прокручиваем окно логов вниз.
-   */
-  useEffect(() => {
-    if (logs.length === 0) {
-      return;
-    }
-
-    const logsContent = logsContentRef.current;
-
-    if (!logsContent) {
-      return;
-    }
-
-    if (typeof logsContent.scrollTo === 'function') {
-      logsContent.scrollTo({
-        top: logsContent.scrollHeight,
-        behavior: 'smooth',
-      });
-
-      return;
-    }
-
-    logsContent.scrollTop = logsContent.scrollHeight;
-  }, [logs]);
-
-  const handleStart = async (): Promise<void> => {
-    setError(null);
-    setLogs([]);
-    setIsRunning(true);
-
-    try {
-      const response = await fetch('/api/automation/start', {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        await getAutomationStatus();
-
-        return;
-      }
-
-      const data: MessageResponse = await response.json();
-
-      setError(data.message ?? t('automation.startError'));
-
-      setIsRunning(false);
-    } catch (requestError: unknown) {
-      const message =
-        requestError instanceof Error
-          ? requestError.message
-          : t('common.unknownError');
-
-      setError(message);
-      setIsRunning(false);
-    }
-  };
-
-  const handleClearLogs = async (): Promise<void> => {
-    setIsClearingLogs(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/automation/logs', {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        const data: MessageResponse = await response.json();
-
-        setError(data.message ?? t('logs.clearError'));
-      }
-
-      setLogs([]);
-    } catch (requestError: unknown) {
-      const message =
-        requestError instanceof Error
-          ? requestError.message
-          : t('common.unknownError');
-
-      setError(message);
-    } finally {
-      setIsClearingLogs(false);
-    }
-  };
-
+export function Dashboard({
+  districts,
+  error,
+  isClearingLogs,
+  isRunning,
+  logs,
+  logsContentRef,
+  totalApplications,
+  t,
+  onClearLogs,
+  onStart,
+}: DashboardProps) {
   return (
     <div className="dashboard">
       <section className="dashboard-hero">
@@ -262,10 +77,10 @@ export function Dashboard() {
             </p>
           </div>
 
-          <button
+          <AppButton
             className="automation-start-button"
             disabled={isRunning}
-            onClick={handleStart}
+            onClick={onStart}
             type="button"
           >
             {isRunning ? (
@@ -275,7 +90,7 @@ export function Dashboard() {
             )}
 
             <span>{isRunning ? t('script.running') : t('script.start')}</span>
-          </button>
+          </AppButton>
         </div>
 
         {error && (
@@ -296,15 +111,16 @@ export function Dashboard() {
               <div>
                 <h3>{t('logs.title')}</h3>
 
-                <span>{translateCount('logs.entries', logs.length)}</span>
+                <span>{t('logs.entries', { count: logs.length })}</span>
               </div>
             </div>
 
-            <button
+            <AppButton
               className="automation-clear-button"
               disabled={logs.length === 0 || isClearingLogs}
-              onClick={handleClearLogs}
+              onClick={onClearLogs}
               type="button"
+              variant="danger"
             >
               {isClearingLogs ? (
                 <RotateCcw className="dashboard-spinner" size={16} />
@@ -313,7 +129,7 @@ export function Dashboard() {
               )}
 
               <span>{t('logs.clear')}</span>
-            </button>
+            </AppButton>
           </div>
 
           <div
@@ -359,12 +175,12 @@ export function Dashboard() {
           <div className="dashboard-section-total">
             <ListChecks size={17} />
 
-            <span>{translateCount('districts.total', totalApplications)}</span>
+            <span>{t('districts.total', { count: totalApplications })}</span>
           </div>
         </div>
 
         <div className="district-stats-grid">
-          {DISTRICT_STATS.map((district) => (
+          {districts.map((district) => (
             <StatsCard
               key={district.id}
               title={t(district.nameKey)}
@@ -378,7 +194,7 @@ export function Dashboard() {
 
           <StatsCard
             title={t('districts.selected')}
-            value={DISTRICT_STATS.length}
+            value={districts.length}
             subtitle={t('districts.selectedDescription')}
             icon={<Building2 size={20} />}
             color="green"

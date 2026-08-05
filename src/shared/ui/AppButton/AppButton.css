@@ -1,0 +1,75 @@
+.app-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+
+  min-height: 46px;
+  padding-inline: var(--space-lg);
+
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  outline: none;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    border-color var(--transition),
+    background-color var(--transition),
+    color var(--transition),
+    opacity var(--transition),
+    transform var(--transition);
+}
+
+.app-button--primary {
+  border-color: rgb(59 130 246 / 24%);
+  background: rgb(59 130 246 / 12%);
+  color: var(--brand-400);
+}
+
+.app-button--primary:hover:not(:disabled) {
+  border-color: rgb(59 130 246 / 36%);
+  background: rgb(59 130 246 / 18%);
+}
+
+.app-button--secondary {
+  border-color: var(--glass-border);
+  background: var(--glass-bg-light);
+  color: var(--text-secondary);
+}
+
+.app-button--secondary:hover:not(:disabled) {
+  border-color: rgb(59 130 246 / 24%);
+  background: rgb(59 130 246 / 8%);
+}
+
+.app-button--danger {
+  border-color: var(--glass-border);
+  background: var(--glass-bg-light);
+  color: var(--text-muted);
+}
+
+.app-button--danger:hover:not(:disabled) {
+  border-color: rgb(239 68 68 / 24%);
+  background: rgb(239 68 68 / 10%);
+  color: var(--red-400);
+}
+
+.app-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.app-button:focus-visible {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 3px;
+}
+
+.app-button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}

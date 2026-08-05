@@ -15,35 +15,9 @@
   pointer-events: auto;
 }
 
-.header-background {
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(0 0 0 / 60%) 0%,
-    rgba(0 0 0 / 50%) 33%,
-    rgba(0 0 0 / 20%) 66%,
-    transparent 100%
-  );
-
-  pointer-events: none;
-}
-
-.header-border {
-  position: absolute;
-  right: 0;
-  left: 0;
-
-  height: 1px;
-
-  background: var(--border-primary);
-  opacity: 0.5;
-
-  pointer-events: none;
-}
-
 .header {
+  --header-panel-background: var(--glass-bg);
+
   position: relative;
   z-index: 1;
 
@@ -59,14 +33,10 @@
   align-items: center;
   justify-content: space-between;
 
-  width: 100%;
-  max-width: var(--container-max-width, 1440px);
   height: var(--header-height);
 
-  margin-inline: auto;
-  padding-inline: var(--container-padding, 24px);
-
-  gap: 16px;
+  padding-block: var(--space-xs);
+  gap: var(--space-md);
 
   overflow: visible;
 }
@@ -82,7 +52,8 @@
 
   width: 100%;
   min-width: 280px;
-  max-width: 620px;
+  max-width: none;
+  order: 2;
 }
 
 .global-search {
@@ -97,10 +68,10 @@
 
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-full);
-  background: rgba(255 255 255 / 4%);
+  background: var(--glass-bg-light);
 
   box-shadow:
-    inset 0 1px 0 rgba(255 255 255 / 5%),
+    inset 0 1px 0 var(--glass-highlight),
     0 8px 30px rgba(0 0 0 / 10%);
 
   isolation: isolate;
@@ -112,17 +83,17 @@
 }
 
 .global-search:hover {
-  border-color: rgba(255 255 255 / 14%);
-  background: rgba(255 255 255 / 5%);
+  border-color: var(--border-primary);
+  background: var(--glass-bg);
 }
 
 .global-search:focus-within {
   border-color: rgba(59 130 246 / 45%);
-  background: rgba(255 255 255 / 6%);
+  background: var(--glass-bg);
 
   box-shadow:
     0 0 0 3px rgba(59 130 246 / 10%),
-    inset 0 1px 0 rgba(255 255 255 / 7%),
+    inset 0 1px 0 var(--glass-highlight),
     0 12px 35px rgba(0 0 0 / 16%);
 }
 
@@ -198,8 +169,12 @@
 }
 
 .global-search__clear-button:hover {
-  background: rgba(255 255 255 / 8%);
+  background: var(--glass-bg-light);
   color: var(--text-primary);
+}
+
+.global-search.has-query .global-search__clear-button {
+  color: var(--brand-400);
 }
 
 /* =====================================================
@@ -220,17 +195,17 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 
-  border: 1px solid var(--search-dropdown-border, rgba(255 255 255 / 12%));
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--search-dropdown-border, var(--border-primary));
+  border-radius: var(--radius-2xl);
 
-  background: var(--search-dropdown-bg, rgba(15 23 42 / 68%));
+  background: var(--header-panel-background);
 
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 
   box-shadow:
     0 24px 60px rgba(0 0 0 / 28%),
-    inset 0 1px 0 rgba(255 255 255 / 8%);
+    inset 0 1px 0 var(--glass-highlight);
 
   animation: searchDropdownIn 180ms ease-out;
 }
@@ -245,7 +220,7 @@
 
 .global-search__dropdown::-webkit-scrollbar-thumb {
   border-radius: var(--radius-full);
-  background: rgba(255 255 255 / 12%);
+  background: var(--scrollbar-thumb);
 }
 
 .global-search__group {
@@ -302,7 +277,7 @@
 
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-full);
-  background: rgba(255 255 255 / 4%);
+  background: var(--glass-bg-light);
 
   color: var(--text-muted);
   font-size: 10px;
@@ -369,12 +344,8 @@
   justify-content: center;
   flex: 0 0 auto;
 
-  width: 38px;
-  height: 38px;
-
-  border: 1px solid rgba(59 130 246 / 14%);
-  border-radius: 12px;
-  background: rgba(59 130 246 / 10%);
+  width: 30px;
+  height: 30px;
 
   color: var(--brand-400);
 }
@@ -456,12 +427,12 @@
 }
 
 .global-search__requests-placeholder {
-  margin: 0 4px 4px;
+  margin: -2px 2px 4px 2px;
   padding: 12px;
 
   border: 1px dashed var(--border-primary);
-  border-radius: var(--radius-md);
-  background: rgba(255 255 255 / 3%);
+  border-radius: var(--radius-xl);
+  background: var(--glass-bg-light);
 
   color: var(--text-muted);
   font-size: 12px;
@@ -527,7 +498,7 @@
   border-radius: var(--radius-full);
   background: transparent;
 
-  color: var(--text-muted);
+  color: var(--text-secondary);
 
   transition:
     color var(--transition),
@@ -536,8 +507,8 @@
 }
 
 .header-button:hover {
-  background: rgba(255 255 255 / 8%);
-  color: var(--text-secondary);
+  background: var(--glass-bg-light);
+  color: var(--text-primary);
 }
 
 .header-button:active {
@@ -560,18 +531,56 @@
   flex: 0 0 auto;
 }
 
-.header-theme-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 500;
+.header-theme-layer {
+  --header-panel-background: var(--glass-bg);
 
-  min-width: 160px;
-  padding: 4px;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  pointer-events: none;
+}
+
+.header-theme-menu-handle,
+.header-theme-menu-title {
+  display: none;
+}
+
+.header-theme-backdrop {
+  position: absolute;
+  inset: 0;
+
+  display: block;
+
+  border: 0;
+  background: transparent;
+
+  pointer-events: auto;
+}
+
+.header-theme-menu {
+  --theme-menu-inset: 6px;
+
+  position: fixed;
+  top: calc(var(--space-xs) + 58px);
+  right: max(
+    var(--container-padding),
+    calc((100vw - var(--container-max-width)) / 2 + var(--container-padding))
+  );
+  z-index: 1001;
+
+  min-width: 184px;
+  padding: 6px;
+  overflow: hidden;
 
   border: 1px solid var(--border-primary);
-  border-radius: var(--radius-md);
-  background: var(--bg-card);
+  border-radius: 28px;
+  background: var(--header-panel-background);
+
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+
+  pointer-events: auto;
 
   box-shadow: var(--shadow-lg);
 
@@ -587,7 +596,7 @@
 
   gap: 10px;
 
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xl);
   background: transparent;
 
   color: var(--text-secondary);
@@ -599,13 +608,22 @@
     background-color var(--transition);
 }
 
+.header-theme-option:first-of-type {
+  border-radius: calc(var(--radius-2xl) - var(--theme-menu-inset));
+}
+
+.header-theme-option:last-of-type {
+  border-radius: calc(var(--radius-2xl) - var(--theme-menu-inset));
+}
+
 .header-theme-option:hover {
-  background: rgba(255 255 255 / 6%);
+  background: var(--glass-bg-light);
 }
 
 .header-theme-option.active {
   background: rgba(59 130 246 / 10%);
   color: var(--brand-400);
+  border-radius: var(--radius-xl);
 }
 
 .header-tab:focus-visible,
@@ -623,6 +641,7 @@
   position: relative;
 
   flex: 0 0 auto;
+  order: 1;
 
   padding: 3px;
 
@@ -646,10 +665,10 @@
 
   gap: 8px;
 
-  border-radius: 24px;
+  border-radius: var(--radius-full);
   background: transparent;
 
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
@@ -661,8 +680,8 @@
 }
 
 .header-tab:hover {
-  background: rgba(255 255 255 / 6%);
-  color: var(--text-secondary);
+  background: var(--glass-bg-light);
+  color: var(--text-primary);
 }
 
 .header-tab.active {
@@ -736,7 +755,7 @@
     height: auto;
     min-height: var(--header-mobile-height, 142px);
 
-    padding: 10px var(--container-padding, 16px) 8px;
+    padding-block: var(--space-xs);
 
     gap: 10px;
 
@@ -744,10 +763,10 @@
   }
 
   /*
-     * На мобильном убираем position: relative,
-     * чтобы dropdown позиционировался относительно
-     * всего header-inner.
-     */
+       * На мобильном убираем position: relative,
+       * чтобы dropdown позиционировался относительно
+       * всего header-inner.
+       */
   .header-search-area {
     position: static;
 
@@ -756,13 +775,21 @@
     width: 100%;
     min-width: 0;
     max-width: none;
+    order: initial;
+  }
+
+  .header-navigation {
+    order: initial;
   }
 
   .global-search {
     width: 100%;
     height: 52px;
+    background: var(--glass-bg-heavy);
 
-    border-radius: 26px;
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 var(--glass-highlight);
   }
 
   .global-search__input {
@@ -791,26 +818,21 @@
   }
 
   /*
-     * При вводе скрываем системные кнопки,
-     * чтобы освободить место для текста.
-     */
-  .global-search:focus-within .header-actions {
-    visibility: hidden;
-
-    opacity: 0;
-    transform: translateX(8px);
-
-    pointer-events: none;
+       * При вводе скрываем системные кнопки,
+       * чтобы освободить место для текста.
+       */
+  .global-search.has-query .header-actions {
+    display: none;
   }
 
-  .global-search:focus-within .global-search__input {
+  .global-search.has-query .global-search__input {
     padding-right: 48px;
   }
 
   /*
-     * Dropdown начинается после обеих строк:
-     * поиска и навигации.
-     */
+       * Dropdown начинается после обеих строк:
+       * поиска и навигации.
+       */
   .global-search__dropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -827,16 +849,14 @@
     padding: 8px;
     overflow-y: auto;
 
-    border-radius: 22px;
+    background: var(--header-panel-background);
 
-    background: var(--search-dropdown-bg, rgba(15 23 42 / 68%));
-
-    backdrop-filter: blur(24px) saturate(150%);
-    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 
     box-shadow:
       0 24px 70px rgba(0 0 0 / 32%),
-      inset 0 1px 0 rgba(255 255 255 / 8%);
+      inset 0 1px 0 var(--glass-highlight);
   }
 
   .global-search__group-header {
@@ -856,8 +876,8 @@
   }
 
   .global-search__result-icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
   }
 
   .header-navigation {
@@ -881,10 +901,12 @@
     gap: 0;
 
     border: 1px solid var(--border-primary);
-    border-radius: 31px;
-    background: rgba(255 255 255 / 4%);
+    border-radius: var(--radius-2xl);
+    background: var(--header-panel-background);
 
-    box-shadow: inset 0 1px 0 rgba(255 255 255 / 5%);
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 var(--glass-highlight);
 
     isolation: isolate;
   }
@@ -905,7 +927,7 @@
 
     box-shadow:
       0 4px 16px rgba(59 130 246 / 20%),
-      inset 0 1px 0 rgba(255 255 255 / 10%);
+      inset 0 1px 0 var(--glass-highlight);
 
     transform: translateX(calc(var(--active-tab-index) * 100%));
 
@@ -931,7 +953,7 @@
     border-radius: 27px;
     background: transparent;
 
-    color: var(--text-muted);
+    color: var(--text-secondary);
 
     transition:
       color 180ms ease,
@@ -961,6 +983,7 @@
 
     width: 100%;
     max-width: 100%;
+    padding: 0 12px;
     overflow: hidden;
 
     font-size: 10px;
@@ -972,12 +995,88 @@
   }
 
   .header-theme-menu {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 64px);
-    right: 12px;
-    left: auto;
+    --theme-menu-inset: 8px;
 
-    min-width: 180px;
+    position: fixed;
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    z-index: 1001;
+
+    width: auto;
+    min-width: 0;
+    padding: 8px 8px 10px;
+
+    border-color: var(--border-primary);
+    border-radius: var(--radius-2xl);
+    background: var(--header-panel-background);
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+
+    box-shadow:
+      0 24px 70px rgba(0 0 0 / 42%),
+      inset 0 1px 0 var(--glass-highlight);
+
+    animation: themeSheetIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .header-theme-backdrop {
+    background: transparent;
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+
+    cursor: default;
+    pointer-events: auto;
+  }
+
+  .header-theme-menu-handle {
+    display: block;
+
+    width: 38px;
+    height: 4px;
+    margin: 2px auto 10px;
+
+    border-radius: var(--radius-xl);
+    background: var(--text-faint);
+  }
+
+  .header-theme-menu-title {
+    display: block;
+    padding: 3px 12px 9px;
+
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .header-theme-option {
+    min-height: 48px;
+    padding: 0 14px;
+    gap: 12px;
+
+    border-radius: var(--radius-xl);
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+
+  .header-theme-option.active {
+    background: rgba(59 130 246 / 16%);
+    color: var(--brand-400);
+  }
+}
+
+@keyframes themeSheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -986,15 +1085,8 @@
 ===================================================== */
 
 @media (max-width: 480px) {
-  .header-inner {
-    padding-right: 10px;
-    padding-left: 10px;
-  }
-
   .global-search {
     height: 50px;
-
-    border-radius: 25px;
   }
 
   .global-search__input {
@@ -1015,7 +1107,7 @@
     height: 18px;
   }
 
-  .global-search:focus-within .global-search__input {
+  .global-search.has-query .global-search__input {
     padding-right: 44px;
   }
 
@@ -1032,12 +1124,10 @@
   }
 
   .global-search__dropdown {
-    right: 10px;
-    left: 10px;
+    right: var(--container-padding);
+    left: var(--container-padding);
 
     max-height: calc(100dvh - var(--header-mobile-height, 142px) - 20px);
-
-    border-radius: 20px;
   }
 
   .header-navigation {
