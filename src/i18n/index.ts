@@ -15,11 +15,15 @@ const translations: Record<Language, Record<string, string>> = {
 };
 
 let currentLanguage: Language = 'ru';
+const LANGUAGE_CHANGE_EVENT = 'eds-language-change';
 
 export function setLanguage(lang: Language): void {
   currentLanguage = lang;
   localStorage.setItem('eds_language', lang);
   document.documentElement.setAttribute('lang', lang);
+  window.dispatchEvent(
+    new CustomEvent(LANGUAGE_CHANGE_EVENT, { detail: lang })
+  );
 }
 
 export function getLanguage(): Language {
@@ -47,11 +51,23 @@ export function t(
   );
 }
 
+export type Translate = typeof t;
+
 export function useTranslation() {
   const [lang, setLang] = useState<Language>(getLanguage);
 
   useEffect(() => {
     document.documentElement.setAttribute('lang', lang);
+
+    const handleLanguageChange = (event: Event) => {
+      setLang((event as CustomEvent<Language>).detail);
+    };
+
+    window.addEventListener(LANGUAGE_CHANGE_EVENT, handleLanguageChange);
+
+    return () => {
+      window.removeEventListener(LANGUAGE_CHANGE_EVENT, handleLanguageChange);
+    };
   }, [lang]);
 
   const changeLanguage = useCallback((newLang: Language) => {

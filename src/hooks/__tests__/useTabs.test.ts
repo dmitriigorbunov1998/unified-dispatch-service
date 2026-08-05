@@ -1,12 +1,13 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { useTabs } from '../useTabs';
+import { useTabs } from '@/widgets/Header/model/useTabs';
 
 // Мокаем (подменяем) i18n, чтобы тестировать только логику хука
 vi.mock('../../i18n', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
+        'nav.home': 'Home',
         'nav.dashboard': 'Dashboard',
         'nav.settings': 'Settings',
         'nav.database': 'Database',
@@ -24,7 +25,7 @@ describe('useTabs', () => {
   it('should return correct number of tabs', () => {
     const { result } = renderHook(() => useTabs());
 
-    expect(result.current.tabs).toHaveLength(3);
+    expect(result.current.tabs).toHaveLength(4);
   });
 
   it('should have correct tab structure', () => {
@@ -41,7 +42,9 @@ describe('useTabs', () => {
   it('should translate tab labels', () => {
     const { result } = renderHook(() => useTabs());
 
-    expect(result.current.tabs[0].label).toBe('Dashboard');
-    expect(result.current.tabs[1].label).toBe('Settings');
+    expect(result.current.tabs[0].label).toBe('Home');
+    expect(result.current.tabs[1].label).toBe('Dashboard');
+    expect(result.current.tabs[2].label).toBe('Database');
+    expect(result.current.tabs[3].label).toBe('Settings');
   });
 });

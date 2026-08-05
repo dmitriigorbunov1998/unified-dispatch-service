@@ -12,6 +12,11 @@ const callbacks = {
   onToggleThemeMenu: vi.fn(),
   onSelectTheme: vi.fn(),
   onLogout: vi.fn(),
+  onClear: vi.fn(),
+  onFocus: vi.fn(),
+  onKeyDown: vi.fn(),
+  onQueryChange: vi.fn(),
+  onSelectResult: vi.fn(),
 };
 
 const defaultProps: HeaderProps = {
@@ -57,6 +62,11 @@ const defaultProps: HeaderProps = {
   ],
 
   themeMenuRef: { current: null },
+  searchAreaRef: { current: null },
+  searchInputRef: { current: null },
+  filteredTabs: [],
+  query: '',
+  shouldShowDropdown: false,
 
   t: (key) => key,
 
@@ -128,6 +138,15 @@ describe('Header', () => {
     expect(callbacks.onToggleThemeMenu).toHaveBeenCalledOnce();
   });
 
+  it('calls the search clear handler', async () => {
+    const user = userEvent.setup();
+
+    render(<Header {...defaultProps} query="request" />);
+    await user.click(screen.getByRole('button', { name: 'search.clear' }));
+
+    expect(callbacks.onClear).toHaveBeenCalledOnce();
+  });
+
   it('renders and selects theme option', async () => {
     const user = userEvent.setup();
 
@@ -142,6 +161,20 @@ describe('Header', () => {
     expect(callbacks.onSelectTheme).toHaveBeenCalledOnce();
 
     expect(callbacks.onSelectTheme).toHaveBeenCalledWith('dark');
+  });
+
+  it('closes theme sheet from backdrop', async () => {
+    const user = userEvent.setup();
+
+    render(<Header {...defaultProps} themeMenuOpen />);
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'theme.close',
+      })
+    );
+
+    expect(callbacks.onToggleThemeMenu).toHaveBeenCalledOnce();
   });
 
   it('marks selected theme', () => {

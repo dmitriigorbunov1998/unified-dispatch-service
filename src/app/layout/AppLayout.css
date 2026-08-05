@@ -1,17 +1,31 @@
 .app {
   display: flex;
   flex-direction: column;
-
   min-height: 100dvh;
-
   background: var(--bg-primary);
 }
 
 .app-main {
-  flex: 1;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  padding-block: var(--layout-block-gap);
+}
 
+.app-main > * {
   width: 100%;
-  max-width: var(--container-max-width, 1440px);
-  padding: 0 10px 0 10px;
-  margin-inline: auto;
+}
+
+.app-footer {
+  flex: 0 0 auto;
+  padding-bottom: var(--layout-block-gap);
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding-block: var(--space-md);
+  }
+  .app-footer {
+    padding-bottom: var(--space-md);
+  }
 }

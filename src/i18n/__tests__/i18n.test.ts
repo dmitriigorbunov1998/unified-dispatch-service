@@ -1,4 +1,5 @@
-import { setLanguage, getLanguage, t } from '@/i18n';
+import { act, renderHook } from '@testing-library/react';
+import { setLanguage, getLanguage, t, useTranslation } from '@/i18n';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('i18n', () => {
@@ -47,6 +48,19 @@ describe('i18n', () => {
       const result = t('app.title');
       expect(result).toBeDefined();
       expect(typeof result).toBe('string');
+    });
+  });
+
+  describe('useTranslation()', () => {
+    it('updates every subscriber when language changes', () => {
+      const first = renderHook(() => useTranslation());
+      const second = renderHook(() => useTranslation());
+
+      act(() => first.result.current.setLang('en'));
+
+      expect(first.result.current.lang).toBe('en');
+      expect(second.result.current.lang).toBe('en');
+      expect(second.result.current.t('nav.home')).toBe('Home');
     });
   });
 });

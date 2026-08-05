@@ -1,8 +1,9 @@
 import type { LucideIcon } from 'lucide-react';
-import type { RefObject } from 'react';
+import type { KeyboardEvent, RefObject } from 'react';
 
-import type { Tab, TabId } from '@/hooks/useTabs';
-import type { Theme } from '@shared/theme/types';
+import type { Tab, TabId } from './model/useTabs';
+import type { Theme } from '@shared/theme';
+import type { Translate } from '@/i18n';
 
 interface ThemeOption {
   value: Theme;
@@ -28,5 +29,16 @@ export interface HeaderProps {
 
   themeMenuRef: RefObject<HTMLDivElement | null>;
 
-  t: (key: string) => string;
+  filteredTabs: Tab[];
+  query: string;
+  searchAreaRef: RefObject<HTMLDivElement | null>;
+  searchInputRef: RefObject<HTMLInputElement | null>;
+  shouldShowDropdown: boolean;
+  onClear: () => void;
+  onFocus: () => void;
+  onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void;
+  onQueryChange: (value: string) => void;
+  onSelectResult: (tabId: TabId) => void;
+
+  t: Translate;
 }

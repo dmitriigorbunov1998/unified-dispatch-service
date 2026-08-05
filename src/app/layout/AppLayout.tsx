@@ -1,19 +1,20 @@
 import { HeaderContainer } from '@/widgets/Header/HeaderContainer';
+import { FooterContainer } from '@/widgets/Footer/FooterContainer';
 import { Outlet } from 'react-router-dom';
 import './AppLayout.css';
 
-interface AppLayoutProps {
-  onLogout?: () => void;
-}
-
-export function AppLayout({ onLogout }: AppLayoutProps) {
+export function AppLayout() {
   return (
     <div className="app">
-      <HeaderContainer onLogout={onLogout} />
+      <HeaderContainer />
 
-      <main className="app-main">
+      <main className="app-main app-content-width">
         <Outlet />
       </main>
+
+      <div className="app-footer app-content-width">
+        <FooterContainer />
+      </div>
     </div>
   );
 }

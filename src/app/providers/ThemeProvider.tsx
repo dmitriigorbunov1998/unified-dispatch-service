@@ -1,35 +1,20 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 
-import type { Theme } from '@shared/theme/types.ts';
+import {
+  getDefaultTheme,
+  getSystemTheme,
+  THEME_STORAGE_KEY,
+  type Theme,
+} from '@shared/theme';
 
-import { ThemeContext } from '../../context/ThemeContext.tsx';
+import { ThemeContext } from '@/shared/theme';
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
-function getSystemTheme(): 'light' | 'dark' {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light';
-}
-
-function getInitialTheme(): Theme {
-  const savedTheme = localStorage.getItem('theme');
-
-  if (
-    savedTheme === 'light' ||
-    savedTheme === 'dark' ||
-    savedTheme === 'system'
-  ) {
-    return savedTheme;
-  }
-
-  return 'system';
-}
-
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const [theme, setTheme] = useState<Theme>(getDefaultTheme);
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>(
     getSystemTheme
   );
@@ -52,8 +37,13 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    localStorage.setItem('theme', theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
+
+  useEffect(() => {
+    document.querySelector('meta[name="theme-color"]')?.remove();
+    document.documentElement.style.removeProperty('background-color');
+  }, []);
 
   const contextValue = useMemo(
     () => ({

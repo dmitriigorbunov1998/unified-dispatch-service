@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { Dashboard } from '../Dashboard';
+import { DashboardContainer } from '../DashboardContainer';
 
 describe('Dashboard', () => {
   it('renders initial dashboard state', () => {
-    render(<Dashboard />);
+    render(<DashboardContainer />);
 
     expect(
       screen.getByRole('heading', {
