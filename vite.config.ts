@@ -1,10 +1,11 @@
 import path from 'node:path';
 
-import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
+const isGitHubPages = (process.env.VITE_DEPLOY_TARGET = 'github');
+
 export default defineConfig({
-  plugins: [react()],
+  base: isGitHubPages ? '/unified-dispatch-service/' : '/',
 
   server: {
     proxy: {
