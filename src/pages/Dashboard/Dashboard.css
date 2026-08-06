@@ -306,29 +306,35 @@
 .automation-logs-content {
   min-height: 250px;
   max-height: 420px;
-
   overflow-y: auto;
-
   padding: 12px;
-
-  scrollbar-width: thin;
-  scrollbar-color: rgba(148 163 184 / 35%) transparent;
 }
 
-.automation-logs-content::-webkit-scrollbar {
-  width: 8px;
-}
+@supports (scrollbar-color: blue) {
+  .automation-logs-content {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+  }
 
-.automation-logs-content::-webkit-scrollbar-track {
-  background: transparent;
-}
+  .automation-logs-content::-webkit-scrollbar {
+    width: 8px;
+  }
 
-.automation-logs-content::-webkit-scrollbar-thumb {
-  border: 2px solid transparent;
-  border-radius: var(--radius-full);
+  .automation-logs-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-  background: rgba(148 163 184 / 30%);
-  background-clip: padding-box;
+  .automation-logs-content::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: var(--radius-full);
+    background: rgba(
+      148,
+      163,
+      184,
+      0.35
+    ); /* Синхронизируем прозрачность с Firefox */
+    background-clip: padding-box;
+  }
 }
 
 .automation-logs-empty {
@@ -407,6 +413,7 @@
   line-height: 1.7;
   text-align: right;
 
+  -webkit-user-select: none;
   user-select: none;
 }
 
