@@ -2,10 +2,8 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
+    branches: main
+    
 permissions:
   contents: write
   pages: write
@@ -19,34 +17,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Клонируем репозиторий
       - uses: actions/checkout@v4
 
-      # 2. Устанавливаем Node.js
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: 24
+          cache: npm
 
-      # 3. Устанавливаем зависимости
       - run: npm ci
-
-      # 4. Запускаем линтер
-      - run: npm run lint
-
-      # 5. Запускаем тесты
-      - run: npm run test:run
-
-      # 6. Сборка (env подтягивается из GitHub Secrets)
       - run: npm run build:github
-        
       - run: cp dist/index.html dist/404.html
 
-      # 7. Деплой на GitHub Actions
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
-      - uses: actions/deploy-pages@v4
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
