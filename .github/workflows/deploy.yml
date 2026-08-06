@@ -41,7 +41,11 @@ jobs:
 
       # 6. Сборка (env подтягивается из GitHub Secrets)
       - name: Build
-        run: npm run build
+        run: npm run build:github
+
+      - name: Create SPA fallback
+        run: cp dist/index.html dist/404.html
+        
         env:
           VITE_EDS_LOGIN: ${{ secrets.VITE_EDS_LOGIN }}
           VITE_EDS_PASSWORD: ${{ secrets.VITE_EDS_PASSWORD }}
