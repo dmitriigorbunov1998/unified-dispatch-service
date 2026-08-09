@@ -1,34 +1,18 @@
-## Description
+## Что изменено
 
-<!-- Что изменено? -->
-
-## Type of change
-
-- [ ] Feature
-- [ ] Bug fix
-- [ ] Refactoring
-- [ ] Documentation
-- [ ] CI/CD
-
-## Changes
+<!-- Кратко перечислите основные изменения. -->
 
 -
 
-## Testing
+## Проверка
 
-How was this tested?
+<!-- Отметьте только выполненные проверки. Неприменимые пункты можно удалить. -->
 
-- [ ] npm run lint
-- [ ] npm run test:run
-- [ ] npm run build
+- [ ] `npm run lint`
+- [ ] `npm run test:run`
+- [ ] `npm run build`
+- [ ] Проверено вручную
 
-## Screenshots
+## Интерфейс
 
-If UI changes were made:
-
-## Checklist
-
-- [ ] Code follows project style
-- [ ] Tests added or updated
-- [ ] Documentation updated if needed
-- [ ] No secrets committed
+<!-- Если интерфейс изменился, добавьте скриншоты до/после. Иначе удалите этот раздел. -->
