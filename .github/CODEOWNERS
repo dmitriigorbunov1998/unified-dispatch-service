@@ -1,0 +1,15 @@
+# Default owner
+
+* @dmitriigorbunov1998
+
+# Frontend
+
+/src/ @dmitriigorbunov1998
+
+# GitHub workflows
+
+/.github/ @dmitriigorbunov1998
+
+# Documentation
+
+*.md @dmitriigorbunov1998
