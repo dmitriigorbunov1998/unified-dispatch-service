@@ -30,8 +30,8 @@
   }
 }
 
-@media (max-width: 768px) and (display-mode: standalone) {
-  .app-footer {
+@media (max-width: 768px) {
+  :root[data-display-mode='standalone'] .app-footer {
     padding-bottom: calc(74px + max(12px, env(safe-area-inset-bottom)));
   }
 }
