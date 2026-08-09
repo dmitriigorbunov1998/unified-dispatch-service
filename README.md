@@ -188,11 +188,20 @@ GitHub Actions automatically runs:
 - Build verification
 - Deployment
 
-### Contributing
+## Contributing
 
 See:
-[SECURITY.md](./SECURITY.md)
+
+[CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Security
+
+See:
+
+[SECURITY.md](SECURITY.md)
 
 ### License
 
-MIT License
+See:
+
+[License](./LICENSE)
