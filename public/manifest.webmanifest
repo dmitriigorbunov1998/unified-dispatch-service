@@ -1,12 +1,11 @@
 {
   "name": "Unified Dispatch Service",
-  "short_name": "UDS",
+  "short_name": "UDS Manager",
   "description": "Unified Dispatch Service application",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#07111f",
-  "theme_color": "#07111f",
   "icons": [
     {
       "src": "/icons/icon-192.png",
