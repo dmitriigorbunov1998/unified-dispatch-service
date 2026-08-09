@@ -763,10 +763,10 @@
   }
 
   /*
-       * На мобильном убираем position: relative,
-       * чтобы dropdown позиционировался относительно
-       * всего header-inner.
-       */
+         * На мобильном убираем position: relative,
+         * чтобы dropdown позиционировался относительно
+         * всего header-inner.
+         */
   .header-search-area {
     position: static;
 
@@ -818,9 +818,9 @@
   }
 
   /*
-       * При вводе скрываем системные кнопки,
-       * чтобы освободить место для текста.
-       */
+         * При вводе скрываем системные кнопки,
+         * чтобы освободить место для текста.
+         */
   .global-search.has-query .header-actions {
     display: none;
   }
@@ -830,9 +830,9 @@
   }
 
   /*
-       * Dropdown начинается после обеих строк:
-       * поиска и навигации.
-       */
+         * Dropdown начинается после обеих строк:
+         * поиска и навигации.
+         */
   .global-search__dropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -1152,5 +1152,47 @@
 
   .global-search__result-status {
     display: none;
+  }
+}
+
+/* =====================================================
+   INSTALLED MOBILE APP
+===================================================== */
+
+@media (max-width: 768px) and (display-mode: standalone) {
+  .header-wrapper {
+    height: calc(60px + var(--header-blur-extend));
+  }
+
+  .header-inner {
+    grid-template-rows: 52px;
+    min-height: 60px;
+  }
+
+  .header-navigation {
+    position: fixed;
+    right: var(--container-padding);
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: var(--container-padding);
+    z-index: 200;
+
+    grid-row: auto;
+
+    width: auto;
+
+    box-shadow:
+      0 16px 44px rgba(0 0 0 / 32%),
+      var(--shadow-sm),
+      inset 0 1px 0 var(--glass-highlight);
+  }
+
+  .global-search__dropdown {
+    max-height: calc(
+      100dvh - 60px - 62px - max(24px, env(safe-area-inset-bottom))
+    );
+  }
+
+  .header-theme-menu {
+    bottom: calc(74px + max(12px, env(safe-area-inset-bottom)));
   }
 }
