@@ -1,73 +1,198 @@
-# React + TypeScript + Vite
+# Unified Dispatch Service
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Unified Dispatch Service](https://img.shields.io/badge/React-TypeScript-blue)
+![CI](https://github.com/dmitriigorbunov1998/unified-dispatch-service/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-Currently, two official plugins are available:
+## About
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Unified Dispatch Service is an automation platform for processing requests.
 
-## React Compiler
+The application helps automate routine operations:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- processing service requests;
+- collecting request information;
+- running browser automation scenarios;
+- monitoring execution logs;
+- tracking automation statistics.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Automation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Automated request processing
+- Browser automation with Playwright
+- Execution status tracking
+- Real-time logs
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Dashboard
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+- Automation status
+- Execution history
+- Statistics overview
+- District monitoring
+
+### Application
+
+- Responsive interface
+- Dark / Light themes
+- Internationalization support
+- Global search
+- Mobile navigation
+
+## Tech Stack
+
+### Frontend
+
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Effector
+- Lucide React
+- CSS Variables
+
+### Backend
+
+- Node.js
+- Express
+- REST API
+
+### Testing
+
+- Vitest
+- React Testing Library
+- Playwright
+- MSW
+
+### Development tools
+
+- ESLint
+- Prettier
+- Husky
+- GitHub Actions
+
+## Architecture
+
+The project follows a feature-based architecture:
+
+```bash
+src/
+├── app/
+│   ├── providers/
+│   └── layout/
+│
+├── pages/
+│
+├── widgets/
+│
+├── features/
+│
+├── entities/
+│
+├── shared/
+│
+└── core/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+Clone repository:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+git clone https://github.com/dmitriigorbunov1998/unified-dispatch-service.git
+
+cd unified-dispatch-service
 ```
+
+### Install dependencies:
+
+```bash
+npm install
+```
+
+## Development
+
+### Run frontend and backend:
+
+```bash
+npm run dev
+```
+
+### Frontend
+
+```bash
+http://localhost:5173
+```
+
+### Backend
+
+```bash
+http://localhost:3001
+```
+
+## Environment variables
+
+### Create `.env.local`:
+
+```bash
+EDS_LOGIN=
+EDS_PASSWORD=
+EDS_URL=
+```
+
+## Scripts
+
+### Development:
+
+```bash
+npm run dev
+```
+
+### Build:
+
+```bash
+npm run build
+```
+
+### Lint:
+
+```bash
+npm run lint
+```
+
+### Tests:
+
+```bash
+npm run test:run
+```
+
+### E2E:
+
+```bash
+npm run test:e2e
+```
+
+### Coverage:
+
+```bash
+npm run test:coverage
+```
+
+## CI/CD
+
+GitHub Actions automatically runs:
+
+- ESLint
+- Unit tests
+- Build verification
+- Deployment
+
+### Contributing
+
+See:
+[SECURITY.md](./SECURITY.md)
+
+### License
+
+MIT License
