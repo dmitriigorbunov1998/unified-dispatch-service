@@ -29,7 +29,7 @@ test('запускает автоматизацию и показывает ло
     });
   });
 
-  await page.goto('/');
+  await page.goto('/dashboard');
 
   await page
     .getByRole('button', {
