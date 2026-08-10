@@ -9,10 +9,20 @@
   overflow: visible;
 
   pointer-events: none;
+  padding-top: env(safe-area-inset-top);
 }
 
 .header-wrapper > * {
   pointer-events: auto;
+}
+
+/* Desktop Safari keeps its native toolbar glass when no sticky surface
+ * adjoins the obscured top inset. Mobile navigation remains sticky below. */
+@media (min-width: 769px) {
+  .header-wrapper {
+    position: relative;
+    top: auto;
+  }
 }
 
 .header {
@@ -532,7 +542,7 @@
 }
 
 .header-theme-layer {
-  --header-panel-background: var(--glass-bg);
+  --header-panel-background: var(--theme-menu-bg);
 
   position: fixed;
   inset: 0;
@@ -837,6 +847,8 @@
 
 @media (max-width: 768px) {
   .header-wrapper {
+    top: var(--space-2xs);
+
     height: calc(
       var(--header-mobile-height, 142px) + var(--header-blur-extend)
     );
@@ -866,10 +878,10 @@
   }
 
   /*
-         * На мобильном убираем position: relative,
-         * чтобы dropdown позиционировался относительно
-         * всего header-inner.
-         */
+           * На мобильном убираем position: relative,
+           * чтобы dropdown позиционировался относительно
+           * всего header-inner.
+           */
   .header-search-area {
     position: static;
 
@@ -921,9 +933,9 @@
   }
 
   /*
-         * При вводе скрываем системные кнопки,
-         * чтобы освободить место для текста.
-         */
+           * При вводе скрываем системные кнопки,
+           * чтобы освободить место для текста.
+           */
   .global-search.has-query .header-actions {
     display: none;
   }
@@ -933,9 +945,9 @@
   }
 
   /*
-         * Dropdown начинается после обеих строк:
-         * поиска и навигации.
-         */
+           * Dropdown начинается после обеих строк:
+           * поиска и навигации.
+           */
   .global-search__dropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -1100,16 +1112,18 @@
   .header-theme-menu {
     --theme-menu-inset: 8px;
 
-    position: fixed;
+    position: absolute;
     top: auto;
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
+    right: auto;
+    bottom: 0;
+    left: 50%;
     z-index: 1001;
 
-    width: auto;
+    width: min(calc(100vw - 40px), 420px);
     min-width: 0;
+    margin-inline: 0;
     padding: 8px 8px 10px;
+    overflow: visible;
 
     border-color: var(--border-primary);
     border-radius: var(--radius-2xl);
@@ -1119,20 +1133,42 @@
     backdrop-filter: none;
 
     box-shadow:
-      0 24px 70px rgba(0 0 0 / 42%),
+      var(--shadow-lg),
       inset 0 1px 0 var(--glass-highlight);
+
+    touch-action: none;
+
+    transform: translate(-50%, var(--theme-sheet-drag-offset, 0px));
+
+    transition:
+      opacity 220ms ease,
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 
     animation: themeSheetIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  .header-theme-menu.dragging {
+    transition: none;
+  }
+
+  .header-theme-menu.closing {
+    opacity: 0;
+    transform: translate(-50%, calc(100% + 32px));
+  }
+
   .header-theme-backdrop {
-    background: transparent;
+    display: none;
+  }
 
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+  .header-theme-layer {
+    position: fixed;
+    top: auto;
+    right: auto;
+    bottom: var(--space-sm);
+    left: 50%;
 
-    cursor: default;
-    pointer-events: auto;
+    width: 1px;
+    height: 1px;
   }
 
   .header-theme-menu-handle {
@@ -1174,12 +1210,12 @@
 @keyframes themeSheetIn {
   from {
     opacity: 0;
-    transform: translateY(18px) scale(0.98);
+    transform: translate(-50%, 18px) scale(0.98);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(-50%, var(--theme-sheet-drag-offset, 0px)) scale(1);
   }
 }
 
@@ -1264,13 +1300,26 @@
 
 @media (max-width: 768px) {
   :root[data-display-mode='standalone'] {
-    --standalone-top-inset: max(env(safe-area-inset-top), 54px);
+    --standalone-navigation-height: 60px;
+    --standalone-navigation-bottom: max(
+      8px,
+      calc(env(safe-area-inset-bottom, 0px) - 10px)
+    );
+    --standalone-top-inset: env(safe-area-inset-top, 0px);
   }
 
   :root[data-display-mode='standalone'] .header-wrapper {
+    top: var(--space-2xs);
+    z-index: 1100;
+
     height: calc(
       60px + var(--standalone-top-inset) + var(--header-blur-extend)
     );
+
+    -webkit-backface-visibility: visible;
+    backface-visibility: visible;
+    transform: none;
+    will-change: auto;
   }
 
   :root[data-display-mode='standalone'] .header-inner {
@@ -1281,14 +1330,15 @@
 
   :root[data-display-mode='standalone'] .header-navigation {
     position: fixed;
-    right: var(--container-padding);
-    bottom: max(12px, env(safe-area-inset-bottom));
-    left: var(--container-padding);
-    z-index: 200;
+    right: 0;
+    bottom: var(--standalone-navigation-bottom);
+    left: 0;
+    z-index: 1100;
 
     grid-row: auto;
 
-    width: auto;
+    width: min(calc(100% - 40px), 440px);
+    margin-inline: auto;
 
     box-shadow:
       0 16px 44px rgba(0 0 0 / 32%),
@@ -1298,12 +1348,38 @@
 
   :root[data-display-mode='standalone'] .global-search__dropdown {
     max-height: calc(
-      100dvh - 60px - var(--standalone-top-inset) - 62px -
-        max(24px, env(safe-area-inset-bottom))
+      100dvh - 60px - var(--standalone-top-inset) -
+        var(--standalone-navigation-height) -
+        var(--standalone-navigation-bottom) - 16px
     );
   }
 
-  :root[data-display-mode='standalone'] .header-theme-menu {
-    bottom: calc(74px + max(12px, env(safe-area-inset-bottom)));
+  :root[data-display-mode='standalone'] .header-theme-layer {
+    z-index: 1000;
+    bottom: calc(
+      var(--standalone-navigation-height) +
+        var(--standalone-navigation-bottom) + 10px
+    );
+  }
+
+  :root[data-display-mode='standalone'] .header-theme-menu.closing {
+    opacity: 1;
+  }
+}
+
+/* Home Button iPhones have no bottom gesture inset and less vertical space. */
+@media (max-width: 768px) and (max-height: 750px) {
+  :root[data-display-mode='standalone'] {
+    --standalone-navigation-height: 56px;
+    --standalone-navigation-bottom: 8px;
+  }
+
+  :root[data-display-mode='standalone'] .header-navigation {
+    width: min(calc(100% - 24px), 414px);
+    height: var(--standalone-navigation-height);
+  }
+
+  :root[data-display-mode='standalone'] .header-tab {
+    height: 48px;
   }
 }

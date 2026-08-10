@@ -139,6 +139,7 @@
   --glass-bg: rgb(28 28 30 / 70%);
   --glass-bg-heavy: rgb(28 28 30 / 85%);
   --glass-bg-light: rgb(28 28 30 / 50%);
+  --theme-menu-bg: rgb(10 10 12 / 92%);
   --glass-border: rgb(255 255 255 / 8%);
   --glass-border-light: rgb(255 255 255 / 5%);
   --glass-highlight: rgb(255 255 255 / 10%);
@@ -180,6 +181,7 @@
   --glass-bg: rgb(255 255 255 / 70%);
   --glass-bg-heavy: rgb(255 255 255 / 90%);
   --glass-bg-light: rgb(255 255 255 / 50%);
+  --theme-menu-bg: rgb(255 255 255 / 94%);
   --glass-border: rgb(0 0 0 / 6%);
   --glass-border-light: rgb(0 0 0 / 4%);
   --glass-highlight: rgb(0 0 0 / 5%);
@@ -221,6 +223,7 @@
     --glass-bg: rgb(28 28 30 / 70%);
     --glass-bg-heavy: rgb(28 28 30 / 85%);
     --glass-bg-light: rgb(28 28 30 / 50%);
+    --theme-menu-bg: rgb(10 10 12 / 92%);
     --glass-border: rgb(255 255 255 / 8%);
     --glass-border-light: rgb(255 255 255 / 5%);
     --glass-highlight: rgb(255 255 255 / 10%);
@@ -260,7 +263,9 @@
 html {
   min-height: 100%;
   overflow-y: auto;
+
   background: transparent;
+
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) transparent;
@@ -272,24 +277,11 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
-body,
-#root {
-  min-height: 100%;
-}
-
-#root {
-  min-height: 100dvh;
-}
-
-/* ============================================================
-   Base document styles
-   ============================================================ */
-
 body {
   min-height: 100dvh;
   overflow-x: clip;
 
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-secondary);
 
   font-family:
@@ -303,9 +295,18 @@ body {
   line-height: 1.5;
 
   transition:
-    background-color var(--transition-slow),
+    background-color var(--transition),
     color var(--transition);
 }
+
+#root {
+  min-height: 100dvh;
+  background: var(--bg-primary);
+}
+
+/* ============================================================
+   Base element styles
+   ============================================================ */
 
 button,
 input,
@@ -338,6 +339,13 @@ a {
   max-width: var(--container-max-width);
   padding-inline: var(--container-padding);
   margin-inline: auto;
+}
+
+/* Safari 26 derives its desktop toolbar color from the page canvas. */
+@media (min-width: 769px) {
+  html {
+    background: var(--bg-primary);
+  }
 }
 
 /* ============================================================
