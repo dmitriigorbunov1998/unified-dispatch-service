@@ -40,6 +40,9 @@ const defaultProps: HeaderProps = {
   lang: 'ru',
   theme: 'light',
   themeMenuOpen: false,
+  themeMenuClosing: false,
+  themeMenuDragging: false,
+  themeMenuDragOffset: 0,
 
   ThemeIcon: Sun,
 

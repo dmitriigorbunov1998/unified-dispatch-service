@@ -18,6 +18,9 @@ export interface HeaderProps {
   lang: string;
   theme: Theme;
   themeMenuOpen: boolean;
+  themeMenuClosing: boolean;
+  themeMenuDragging: boolean;
+  themeMenuDragOffset: number;
   themeOptions: ThemeOption[];
   ThemeIcon: LucideIcon;
 

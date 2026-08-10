@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 
 import {
   getDefaultTheme,
@@ -35,15 +41,58 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.dataset.theme = theme;
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
-  }, [theme]);
 
-  useEffect(() => {
-    document.querySelector('meta[name="theme-color"]')?.remove();
-    document.documentElement.style.removeProperty('background-color');
-  }, []);
+    document.body.style.backgroundColor = 'transparent';
+
+    const statusBarMeta = document.querySelector<HTMLMetaElement>(
+      'meta[name="apple-mobile-web-app-status-bar-style"]'
+    );
+
+    statusBarMeta?.setAttribute(
+      'content',
+      resolvedTheme === 'dark' ? 'black-translucent' : 'default'
+    );
+
+    const desktopMedia = window.matchMedia('(min-width: 769px)');
+    const themeColor = resolvedTheme === 'dark' ? '#000000' : '#ffffff';
+
+    const syncBrowserCanvas = () => {
+      const existingThemeColor = document.querySelector<HTMLMetaElement>(
+        'meta[name="theme-color"]'
+      );
+
+      if (!desktopMedia.matches) {
+        document.documentElement.style.backgroundColor = 'transparent';
+        existingThemeColor?.remove();
+        return;
+      }
+
+      document.documentElement.style.backgroundColor = themeColor;
+
+      const browserThemeColor =
+        existingThemeColor ?? document.createElement('meta');
+
+      browserThemeColor.id = 'browser-theme-color';
+      browserThemeColor.name = 'theme-color';
+      browserThemeColor.content = themeColor;
+      browserThemeColor.media = '(min-width: 769px)';
+
+      if (!existingThemeColor) {
+        document.head.append(browserThemeColor);
+      }
+    };
+
+    syncBrowserCanvas();
+    desktopMedia.addEventListener('change', syncBrowserCanvas);
+
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+
+    return () => {
+      desktopMedia.removeEventListener('change', syncBrowserCanvas);
+    };
+  }, [resolvedTheme, theme]);
 
   const contextValue = useMemo(
     () => ({

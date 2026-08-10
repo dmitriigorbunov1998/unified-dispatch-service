@@ -3,6 +3,8 @@
   flex-direction: column;
   min-height: 100dvh;
   background: var(--bg-primary);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .app-main {
@@ -25,6 +27,7 @@
   .app-main {
     padding-block: var(--space-md);
   }
+
   .app-footer {
     padding-bottom: var(--space-md);
   }
@@ -32,6 +35,9 @@
 
 @media (max-width: 768px) {
   :root[data-display-mode='standalone'] .app-footer {
-    padding-bottom: calc(74px + max(12px, env(safe-area-inset-bottom)));
+    padding-bottom: calc(
+      var(--standalone-navigation-height, 60px) +
+        var(--standalone-navigation-bottom, 12px) + var(--space-md)
+    );
   }
 }

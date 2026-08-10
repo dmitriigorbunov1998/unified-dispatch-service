@@ -12,6 +12,9 @@ export function Header({
   lang,
   theme,
   themeMenuOpen,
+  themeMenuClosing,
+  themeMenuDragging,
+  themeMenuDragOffset,
   themeOptions,
   ThemeIcon,
   onTabChange,
@@ -42,6 +45,10 @@ export function Header({
     '--tabs-count': tabs.length,
   } as CSSProperties;
 
+  const themeMenuStyles = {
+    '--theme-sheet-drag-offset': `${themeMenuDragOffset}px`,
+  } as CSSProperties;
+
   const themeMenu = themeMenuOpen
     ? createPortal(
         <div className="header-theme-layer">
@@ -53,9 +60,12 @@ export function Header({
           />
 
           <div
-            className="header-theme-menu"
+            className={`header-theme-menu${
+              themeMenuDragging ? ' dragging' : ''
+            }${themeMenuClosing ? ' closing' : ''}`}
             role="menu"
             aria-label={t('theme.select')}
+            style={themeMenuStyles}
           >
             <div className="header-theme-menu-handle" />
             <div className="header-theme-menu-title">{t('theme.select')}</div>
