@@ -14,8 +14,8 @@ import {
   Zap,
 } from 'lucide-react';
 
-import { StatsCard } from '@/widgets/StatsCard/StatsCard';
-import { AppButton } from '@/shared/ui/AppButton/AppButton';
+import { StatsCard } from '@/shared/ui/StatsCard';
+import { AppButton } from '@/shared/ui/AppButton';
 import type { DashboardProps } from './Dashboard.types';
 
 import './Dashboard.css';

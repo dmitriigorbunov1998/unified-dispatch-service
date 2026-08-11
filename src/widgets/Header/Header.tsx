@@ -1,8 +1,8 @@
-import type { CSSProperties } from 'react';
-import { createPortal } from 'react-dom';
 import { Globe, LogOut, Search, X } from 'lucide-react';
 
 import type { HeaderProps } from './Header.types';
+import { HeaderNavigation } from './ui/HeaderNavigation';
+import { ThemeMenu } from './ui/ThemeMenu';
 
 import './Header.css';
 
@@ -35,68 +35,6 @@ export function Header({
   onSelectResult,
   t,
 }: HeaderProps) {
-  const activeTabIndex = Math.max(
-    tabs.findIndex((tab) => tab.id === activeTab),
-    0
-  );
-
-  const navigationStyles = {
-    '--active-tab-index': activeTabIndex,
-    '--tabs-count': tabs.length,
-  } as CSSProperties;
-
-  const themeMenuStyles = {
-    '--theme-sheet-drag-offset': `${themeMenuDragOffset}px`,
-  } as CSSProperties;
-
-  const themeMenu = themeMenuOpen
-    ? createPortal(
-        <div className="header-theme-layer">
-          <button
-            type="button"
-            className="header-theme-backdrop"
-            aria-label={t('theme.close')}
-            onClick={onToggleThemeMenu}
-          />
-
-          <div
-            className={`header-theme-menu${
-              themeMenuDragging ? ' dragging' : ''
-            }${themeMenuClosing ? ' closing' : ''}`}
-            role="menu"
-            aria-label={t('theme.select')}
-            style={themeMenuStyles}
-          >
-            <div className="header-theme-menu-handle" />
-            <div className="header-theme-menu-title">{t('theme.select')}</div>
-
-            {themeOptions.map(({ value, label, icon: OptionIcon }) => {
-              const isSelected = theme === value;
-
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={isSelected}
-                  className={`header-theme-option ${
-                    isSelected ? 'active' : ''
-                  }`}
-                  data-testid={`header-theme-option-${value}`}
-                  onClick={() => onSelectTheme(value)}
-                >
-                  <OptionIcon size={18} aria-hidden="true" />
-
-                  <span>{label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>,
-        document.body
-      )
-    : null;
-
   return (
     <>
       <div className="header-wrapper">
@@ -279,38 +217,27 @@ export function Header({
               )}
             </div>
 
-            <nav
-              className="header-navigation"
-              aria-label={t('nav.title')}
-              style={navigationStyles}
-            >
-              <span className="header-tab-indicator" aria-hidden="true" />
-
-              {tabs.map(({ id, label, title, icon: TabIcon }) => {
-                const isActive = activeTab === id;
-
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    className={`header-tab ${isActive ? 'active' : ''}`}
-                    aria-current={isActive ? 'page' : undefined}
-                    data-testid={`header-tab-${id}`}
-                    title={title}
-                    onClick={() => onTabChange(id)}
-                  >
-                    <TabIcon size={16} aria-hidden="true" />
-
-                    <span className="header-tab-label">{label}</span>
-                  </button>
-                );
-              })}
-            </nav>
+            <HeaderNavigation
+              activeTab={activeTab}
+              tabs={tabs}
+              onTabChange={onTabChange}
+              t={t}
+            />
           </div>
         </header>
       </div>
 
-      {themeMenu}
+      <ThemeMenu
+        theme={theme}
+        themeMenuOpen={themeMenuOpen}
+        themeMenuClosing={themeMenuClosing}
+        themeMenuDragging={themeMenuDragging}
+        themeMenuDragOffset={themeMenuDragOffset}
+        themeOptions={themeOptions}
+        onToggleThemeMenu={onToggleThemeMenu}
+        onSelectTheme={onSelectTheme}
+        t={t}
+      />
     </>
   );
 }

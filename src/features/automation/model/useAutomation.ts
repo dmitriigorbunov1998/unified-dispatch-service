@@ -30,6 +30,7 @@ export function useAutomation(messages: AutomationMessages): AutomationModel {
 
       setLogs(status.logs);
       setIsRunning(status.isRunning);
+      setError(null);
     } catch (requestError: unknown) {
       setError(getErrorMessage(requestError, messages.statusError));
       setIsRunning(false);
@@ -75,6 +76,7 @@ export function useAutomation(messages: AutomationMessages): AutomationModel {
     try {
       await automationApi.clearLogs();
       setLogs([]);
+      setError(null);
     } catch (requestError: unknown) {
       setError(getErrorMessage(requestError, messages.clearError));
     } finally {

@@ -1,45 +1,33 @@
-import { getThemeIcon, getDefaultTheme, THEME_OPTIONS } from '../theme.ts';
-import { Sun, Moon, Monitor } from 'lucide-react';
+import { THEME_OPTIONS } from '../theme.ts';
+import { loadTheme, saveTheme } from '../storage';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { Theme } from '../types.ts';
 
 describe('Theme Utils', () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
-  describe('getThemeIcon()', () => {
-    it('should return Sun for light theme', () => {
-      expect(getThemeIcon('light')).toBe(Sun);
-    });
-
-    it('should return Moon for dark theme', () => {
-      expect(getThemeIcon('dark')).toBe(Moon);
-    });
-
-    it('should return Monitor for system theme', () => {
-      expect(getThemeIcon('system')).toBe(Monitor);
-    });
-
-    it('should return Monitor for unknown theme', () => {
-      expect(getThemeIcon('unknown' as Theme)).toBe(Monitor);
-    });
-  });
-
-  // Проверяем утилиты для темы БЕЗ UI
-  describe('getDefaultTheme()', () => {
+  describe('theme storage', () => {
     it('should return default by default', () => {
-      expect(getDefaultTheme()).toBe('system');
+      expect(loadTheme()).toBe('system');
     });
 
     it('should return saved theme from localStorage', () => {
       localStorage.setItem('eds_theme', 'dark');
-      expect(getDefaultTheme()).toBe('dark');
+      expect(loadTheme()).toBe('dark');
     });
 
     it('should ignore invalid localStorage values', () => {
       localStorage.setItem('eds_theme', 'invalid');
-      expect(getDefaultTheme()).toBe('system');
+      expect(loadTheme()).toBe('system');
+    });
+
+    it('migrates writes to the UDS storage key', () => {
+      localStorage.setItem('eds_theme', 'dark');
+      saveTheme('light');
+
+      expect(localStorage.getItem('uds_theme')).toBe('light');
+      expect(localStorage.getItem('eds_theme')).toBeNull();
     });
   });
 
