@@ -1,7 +1,7 @@
 import type { RefObject } from 'react';
 
 import type { DistrictStat } from '@/entities/district';
-import type { Translate } from '@/i18n';
+import type { Translate } from '@/shared/config/i18n';
 
 export interface DashboardProps {
   districts: readonly DistrictStat[];

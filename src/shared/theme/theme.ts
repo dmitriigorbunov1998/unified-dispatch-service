@@ -1,55 +1,27 @@
-import { Sun, Moon, Monitor } from 'lucide-react';
 import type { Theme } from './types.ts';
-import type { LucideIcon } from 'lucide-react';
+
+export type ThemeIconName = 'sun' | 'moon' | 'monitor';
 
 export interface ThemeOption {
   value: Theme;
   labelKey: string;
-  icon: LucideIcon;
+  icon: ThemeIconName;
 }
-
-export const THEME_STORAGE_KEY = 'eds_theme';
 
 export const THEME_OPTIONS: ThemeOption[] = [
   {
     value: 'light',
     labelKey: 'theme.light',
-    icon: Sun,
+    icon: 'sun',
   },
   {
     value: 'dark',
     labelKey: 'theme.dark',
-    icon: Moon,
+    icon: 'moon',
   },
   {
     value: 'system',
     labelKey: 'theme.system',
-    icon: Monitor,
+    icon: 'monitor',
   },
 ];
-
-export function getThemeIcon(theme: Theme): LucideIcon {
-  return (
-    THEME_OPTIONS.find((option) => option.value === theme)?.icon ?? Monitor
-  );
-}
-
-export function getDefaultTheme(): Theme {
-  const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-
-  if (
-    savedTheme === 'light' ||
-    savedTheme === 'dark' ||
-    savedTheme === 'system'
-  ) {
-    return savedTheme;
-  }
-
-  return 'system';
-}
-
-export function getSystemTheme(): 'light' | 'dark' {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light';
-}

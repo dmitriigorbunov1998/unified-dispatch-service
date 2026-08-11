@@ -48,7 +48,6 @@ The application helps automate routine operations:
 - TypeScript
 - Vite
 - React Router
-- Effector
 - Lucide React
 - CSS Variables
 
@@ -74,25 +73,31 @@ The application helps automate routine operations:
 
 ## Architecture
 
-The project follows a feature-based architecture:
+The frontend follows Feature-Sliced Design. Imports are checked by ESLint so
+lower layers cannot depend on higher layers. UI components contain rendering,
+while state, effects, API calls and platform adapters live in their respective
+model, api and shared modules.
 
 ```bash
 src/
 ├── app/
 │   ├── providers/
 │   └── layout/
-│
 ├── pages/
-│
 ├── widgets/
-│
 ├── features/
-│
 ├── entities/
-│
-├── shared/
-│
-└── core/
+└── shared/
+    ├── api/
+    ├── config/
+    ├── lib/
+    ├── theme/
+    └── ui/
+
+server/
+├── automation/
+├── config/
+└── http/
 ```
 
 ## Installation
@@ -139,6 +144,11 @@ http://localhost:3001
 EDS_LOGIN=
 EDS_PASSWORD=
 EDS_URL=
+EDS_HEADLESS=true
+CORS_ALLOWED_ORIGINS=http://localhost:5173
+
+# Required only when frontend and backend use different origins
+VITE_API_BASE_URL=
 ```
 
 ## Scripts

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Monitor, Moon, Sun } from 'lucide-react';
 
-import { ROUTE_TABS, TAB_ROUTES } from './navigation';
-import { useTabs, type TabId } from './useTabs';
+import { ROUTE_TABS, TAB_ROUTES, type TabId } from './navigation';
+import { useTabs } from './useTabs';
 import { useTheme } from '@/shared/theme';
-import { useTranslation } from '@/i18n';
-import { getThemeIcon, THEME_OPTIONS } from '@/shared/theme';
+import { useTranslation } from '@/shared/config/i18n';
+import { THEME_OPTIONS, type ThemeIconName } from '@/shared/theme';
 import { useThemeSheetGesture } from './useThemeSheetGesture';
 
 export function useHeaderControls() {
@@ -20,9 +21,18 @@ export function useHeaderControls() {
   const closeThemeMenu = useCallback(() => setThemeMenuOpen(false), []);
 
   const activeTab = ROUTE_TABS[location.pathname] ?? 'dashboard';
-  const ThemeIcon = getThemeIcon(theme);
+  const themeIcons = {
+    sun: Sun,
+    moon: Moon,
+    monitor: Monitor,
+  } satisfies Record<ThemeIconName, typeof Sun>;
+  const selectedThemeOption = THEME_OPTIONS.find(
+    (option) => option.value === theme
+  );
+  const ThemeIcon = themeIcons[selectedThemeOption?.icon ?? 'monitor'];
   const themeOptions = THEME_OPTIONS.map((option) => ({
     ...option,
+    icon: themeIcons[option.icon],
     label: t(option.labelKey),
   }));
   const {

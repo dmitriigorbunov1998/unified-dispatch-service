@@ -1,9 +1,10 @@
 import { Activity, Database, Home, Settings } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
-import { useTranslation } from '@/i18n';
+import { useTranslation } from '@/shared/config/i18n';
+import { TAB_CONFIGS, type TabIconName, type TabId } from './navigation';
 
-export type TabId = 'home' | 'dashboard' | 'settings' | 'database';
+export type { TabId } from './navigation';
 
 export interface Tab {
   id: TabId;
@@ -12,18 +13,12 @@ export interface Tab {
   icon: LucideIcon;
 }
 
-interface TabConfig {
-  id: TabId;
-  labelKey: string;
-  icon: LucideIcon;
-}
-
-const TAB_CONFIGS: TabConfig[] = [
-  { id: 'home', labelKey: 'nav.home', icon: Home },
-  { id: 'dashboard', labelKey: 'nav.dashboard', icon: Activity },
-  { id: 'database', labelKey: 'nav.database', icon: Database },
-  { id: 'settings', labelKey: 'nav.settings', icon: Settings },
-];
+const TAB_ICONS = {
+  home: Home,
+  activity: Activity,
+  database: Database,
+  settings: Settings,
+} satisfies Record<TabIconName, LucideIcon>;
 
 export function useTabs() {
   const { t } = useTranslation();
@@ -31,7 +26,7 @@ export function useTabs() {
     id: config.id,
     label: t(config.labelKey),
     title: t(config.labelKey),
-    icon: config.icon,
+    icon: TAB_ICONS[config.icon],
   }));
 
   return { tabs };

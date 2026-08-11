@@ -1,9 +1,7 @@
 module.exports = {
   ci: {
     collect: {
-      url: [
-        'https://dmitriigorbunov1998.github.io/unified-dispatch-service/'
-      ],
+      url: ['https://dmitriigorbunov1998.github.io/unified-dispatch-service/'],
       numberOfRuns: 3,
     },
 
@@ -20,7 +18,7 @@ module.exports = {
           'error',
           {
             minScore: 0.95,
-          }
+          },
         ],
 
         'categories:best-practices': [

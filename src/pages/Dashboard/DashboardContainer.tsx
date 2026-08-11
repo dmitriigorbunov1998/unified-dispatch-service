@@ -2,7 +2,7 @@ import { Dashboard } from './Dashboard';
 import { useLogAutoScroll } from './lib/useLogAutoScroll';
 import { DISTRICT_STATS, getTotalApplications } from '@/entities/district';
 import { useAutomation } from '@/features/automation';
-import { useTranslation } from '@/i18n';
+import { useTranslation } from '@/shared/config/i18n';
 
 export function DashboardContainer() {
   const { t } = useTranslation();

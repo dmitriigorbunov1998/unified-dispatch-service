@@ -1,5 +1,5 @@
-import { HeaderContainer } from '@/widgets/Header/HeaderContainer';
-import { FooterContainer } from '@/widgets/Footer/FooterContainer';
+import { HeaderContainer } from '@/widgets/Header';
+import { FooterContainer } from '@/widgets/Footer';
 import { Outlet } from 'react-router-dom';
 import './AppLayout.css';
 

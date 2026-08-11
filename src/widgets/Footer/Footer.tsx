@@ -6,7 +6,7 @@ import {
   FaWhatsapp,
 } from 'react-icons/fa6';
 import { FOOTER_SECTIONS } from './model/content';
-import type { Translate } from '@/i18n';
+import type { Translate } from '@/shared/config/i18n';
 
 import './Footer.css';
 

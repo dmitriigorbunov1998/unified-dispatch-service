@@ -14,14 +14,33 @@ type ErrorPayload = {
 
 export async function requestJson<T>(
   input: RequestInfo | URL,
-  init?: RequestInit
+  init?: RequestInit,
+  parse?: (value: unknown) => T
 ): Promise<T> {
   const response = await fetch(input, init);
-  const data = (await response.json()) as T & ErrorPayload;
+  const contentType = response.headers.get('content-type') ?? '';
 
-  if (!response.ok) {
-    throw new HttpError(data.message ?? response.statusText, response.status);
+  if (!contentType.includes('application/json')) {
+    throw new HttpError('Server returned a non-JSON response', response.status);
   }
 
-  return data;
+  const data: unknown = await response.json();
+
+  if (!response.ok) {
+    const errorPayload = isErrorPayload(data) ? data : undefined;
+    throw new HttpError(
+      errorPayload?.message ?? response.statusText,
+      response.status
+    );
+  }
+
+  return parse ? parse(data) : (data as T);
+}
+
+function isErrorPayload(value: unknown): value is ErrorPayload {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    (!('message' in value) || typeof value.message === 'string')
+  );
 }

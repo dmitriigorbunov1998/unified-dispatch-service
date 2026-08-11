@@ -1,20 +1,12 @@
 import { chromium } from 'playwright';
 import type { Browser, BrowserContext, Locator, Page } from 'playwright';
+import {
+  AUTOMATION_SCENARIO,
+  getEdsConfig,
+  type EdsConfig,
+} from '../config/automationConfig';
 
 type LogCallback = (message: string) => void;
-
-interface EdsConfig {
-  url: string;
-  login: string;
-  password: string;
-}
-
-const CATEGORY_NAME =
-  '23.4. Обеспечение доступа в квартиру для проведения ТО ВКГО совместно с СО';
-
-const STATUS_NAME = 'Требуется доработка';
-
-const DISTRICTS = ['Немчиновка', 'Новоивановское'] as const;
 
 /**
  * Случайная пауза между действиями.
@@ -34,41 +26,6 @@ function pause(minMilliseconds = 500, maxMilliseconds = 1_200): Promise<void> {
  */
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-/**
- * Получение конфигурации из переменных окружения.
- */
-function getEdsConfig(): EdsConfig {
-  const url = process.env.EDS_URL?.trim();
-  const login = process.env.EDS_LOGIN?.trim();
-  const password = process.env.EDS_PASSWORD?.trim();
-
-  if (!url || !login || !password) {
-    const missingVariables: string[] = [];
-
-    if (!url) {
-      missingVariables.push('EDS_URL');
-    }
-
-    if (!login) {
-      missingVariables.push('EDS_LOGIN');
-    }
-
-    if (!password) {
-      missingVariables.push('EDS_PASSWORD');
-    }
-
-    throw new Error(
-      `Не указаны переменные окружения: ${missingVariables.join(', ')}`
-    );
-  }
-
-  return {
-    url,
-    login,
-    password,
-  };
 }
 
 /**
@@ -289,15 +246,17 @@ async function selectCategory(page: Page, addLog: LogCallback): Promise<void> {
 
   await pause(600, 1_100);
 
-  addLog(`Выбираю категорию: ${CATEGORY_NAME}`);
+  addLog(`Выбираю категорию: ${AUTOMATION_SCENARIO.category}`);
 
   const categoryOptions = page.locator('span.ml-12').filter({
-    hasText: new RegExp(`^\\s*${escapeRegExp(CATEGORY_NAME)}\\s*$`),
+    hasText: new RegExp(
+      `^\\s*${escapeRegExp(AUTOMATION_SCENARIO.category)}\\s*$`
+    ),
   });
 
   const categoryOption = await waitForVisibleLocator(
     categoryOptions,
-    `категория «${CATEGORY_NAME}»`
+    `категория «${AUTOMATION_SCENARIO.category}»`
   );
 
   await categoryOption.scrollIntoViewIfNeeded();
@@ -332,15 +291,17 @@ async function selectStatus(page: Page, addLog: LogCallback): Promise<void> {
 
   await pause(600, 1_100);
 
-  addLog(`Выбираю статус: ${STATUS_NAME}`);
+  addLog(`Выбираю статус: ${AUTOMATION_SCENARIO.status}`);
 
   const statusOptions = page.locator('span.ml-12').filter({
-    hasText: new RegExp(`^\\s*${escapeRegExp(STATUS_NAME)}\\s*$`),
+    hasText: new RegExp(
+      `^\\s*${escapeRegExp(AUTOMATION_SCENARIO.status)}\\s*$`
+    ),
   });
 
   const statusOption = await waitForVisibleLocator(
     statusOptions,
-    `статус «${STATUS_NAME}»`
+    `статус «${AUTOMATION_SCENARIO.status}»`
   );
 
   await statusOption.scrollIntoViewIfNeeded();
@@ -378,7 +339,7 @@ async function selectDistricts(page: Page, addLog: LogCallback): Promise<void> {
 
   await pause(500, 900);
 
-  for (const districtName of DISTRICTS) {
+  for (const districtName of AUTOMATION_SCENARIO.districts) {
     addLog(`Выбираю район: ${districtName}`);
 
     /*
@@ -410,7 +371,7 @@ async function selectDistricts(page: Page, addLog: LogCallback): Promise<void> {
 
   await clickVisibleApplyButton(page, 'Районы', addLog);
 
-  addLog(`Выбраны районы: ${DISTRICTS.join(', ')}`);
+  addLog(`Выбраны районы: ${AUTOMATION_SCENARIO.districts.join(', ')}`);
 }
 
 /**
@@ -473,7 +434,7 @@ export async function runEdsAutomation(addLog: LogCallback): Promise<void> {
     addLog('Запускаю Chromium');
 
     browser = await chromium.launch({
-      headless: false,
+      headless: config.headless,
       slowMo: 50,
     });
 

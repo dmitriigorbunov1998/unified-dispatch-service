@@ -3,7 +3,7 @@ import type { KeyboardEvent, RefObject } from 'react';
 
 import type { Tab, TabId } from './model/useTabs';
 import type { Theme } from '@shared/theme';
-import type { Translate } from '@/i18n';
+import type { Translate } from '@/shared/config/i18n';
 
 interface ThemeOption {
   value: Theme;
