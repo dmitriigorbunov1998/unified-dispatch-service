@@ -200,8 +200,8 @@
 
   background: var(--header-panel-background);
 
-  backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 
   box-shadow:
     0 24px 60px rgba(0 0 0 / 28%),
@@ -698,6 +698,104 @@
 ===================================================== */
 
 @media (max-width: 1200px) {
+  .header-navigation {
+    --active-tab-index: 0;
+    overflow: hidden;
+
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-2xl);
+    background: var(--header-panel-background);
+
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 var(--glass-highlight);
+
+    isolation: isolate;
+  }
+
+  .header-tab-indicator {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    z-index: -1;
+
+    display: block;
+
+    width: calc((100% - 8px) / var(--tabs-count));
+
+    border-radius: 27px;
+    background: rgba(59 130 246 / 18%);
+
+    box-shadow:
+      0 4px 16px rgba(59 130 246 / 20%),
+      inset 0 1px 0 var(--glass-highlight);
+
+    transform: translateX(calc(var(--active-tab-index) * 100%));
+
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .header-tab {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    height: 54px;
+    padding: 6px 3px;
+
+    gap: 4px;
+
+    border-radius: 27px;
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    transition:
+      color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .header-tab:hover,
+  .header-tab.active {
+    background: transparent;
+    box-shadow: none;
+    color: var(--brand-400);
+  }
+
+  .header-tab:active {
+    transform: scale(0.94);
+  }
+
+  .header-tab svg {
+    flex-shrink: 0;
+
+    width: 18px;
+    height: 18px;
+  }
+
+  .header-tab-label {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+    padding: 0 12px;
+    overflow: hidden;
+
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.15;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .header-search-area {
     max-width: none;
   }
@@ -856,8 +954,8 @@
 
     background: var(--header-panel-background);
 
-    backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 
     box-shadow:
       0 24px 70px rgba(0 0 0 / 32%),
@@ -869,8 +967,8 @@
 
     background: transparent;
 
-    backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   .global-search__result {
