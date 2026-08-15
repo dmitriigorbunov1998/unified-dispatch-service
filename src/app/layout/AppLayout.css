@@ -34,6 +34,11 @@
 }
 
 @media (max-width: 768px) {
+  :root[data-display-mode='standalone'] .app {
+    /* The installed app's header already owns the iOS top safe-area inset. */
+    padding-top: 0;
+  }
+
   :root[data-display-mode='standalone'] .app-footer {
     padding-bottom: calc(
       var(--standalone-navigation-height, 60px) +

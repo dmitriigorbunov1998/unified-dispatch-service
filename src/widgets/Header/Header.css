@@ -1115,7 +1115,7 @@
     position: absolute;
     top: auto;
     right: auto;
-    bottom: 0;
+    bottom: var(--space-sm);
     left: 50%;
     z-index: 1001;
 
@@ -1162,13 +1162,12 @@
 
   .header-theme-layer {
     position: fixed;
-    top: auto;
-    right: auto;
-    bottom: var(--space-sm);
-    left: 50%;
+    inset: 0;
 
-    width: 1px;
-    height: 1px;
+    width: auto;
+    height: auto;
+
+    background: transparent;
   }
 
   .header-theme-menu-handle {
@@ -1324,8 +1323,8 @@
 
   :root[data-display-mode='standalone'] .header-inner {
     grid-template-rows: 52px;
-    min-height: calc(60px + var(--standalone-top-inset));
-    padding-top: calc(var(--space-xs) + var(--standalone-top-inset));
+    min-height: 60px;
+    padding-top: var(--space-xs);
   }
 
   :root[data-display-mode='standalone'] .header-navigation {
@@ -1356,6 +1355,9 @@
 
   :root[data-display-mode='standalone'] .header-theme-layer {
     z-index: 1000;
+  }
+
+  :root[data-display-mode='standalone'] .header-theme-menu {
     bottom: calc(
       var(--standalone-navigation-height) +
         var(--standalone-navigation-bottom) + 10px
